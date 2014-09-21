@@ -51,24 +51,6 @@
 
 var app = angular.module('shop', ['ngRoute']);
 
-app.config(function($routeProvider) {
-    'use strict';
-
-    $routeProvider
-        .when('/cart', {
-            templateUrl: 'cart.html',
-            controller: 'CartCtrl'
-        })
-        .when('/product/:shortCode', {
-            templateUrl: 'pdt_details.html',
-            controller: 'PdtCtrl'
-        })
-        .when('/category/:cat', {
-            templateUrl: 'listing.html',
-            controller: 'CtgCtrl'
-        });
-});
-
 app.service('Requests', function() {
     'use strict';
 
@@ -130,7 +112,7 @@ function CtgCtrl($scope, $rootScope, $location, $routeParams, Requests) {
 
     $scope.refreshProductList = function(category) {
         Requests.getRequest('/category/'+category, function(data) {
-            console.log(data);
+            console.log(['Category Data', data]);
             $scope.productList = data.products;
         });
     };
@@ -142,8 +124,8 @@ function CtgCtrl($scope, $rootScope, $location, $routeParams, Requests) {
         $scope.refreshProductList(args.category);
     });
 
-    $scope.showProduct = function(shortCode) {
-        $rootScope.$broadcast('productSet', {shortCode: shortCode});
+    $scope.showProduct = function(product) {
+        $rootScope.$broadcast('productSet', {product: product});
     };
 
     //Sorting start
@@ -159,21 +141,22 @@ function PdtCtrl($scope, $location, Requests) {
     'use strict';
 
     $scope.$on('productSet', function(event, args) {
-        Requests.getRequest('/'+args.shortCode, function(data) {
-            $scope.product = data;
+        $scope.product = args.product;
+        $scope.is_purchasable = args.product.units_available > 0 && args.product.unit_price > 0;
+
+        $('#products_list').fadeOut('slow', function() {
+            $('#product_board').fadeIn().removeAttr('hidden');
         });
     });
 
     $scope.addCart = function() {
         console.log('Add Cart');
-        console.log($scope.pdt.productId);
-        var data = {productId: $scope.pdt.productId};
-        console.log('Data');
-        console.log(data);
-        console.log('Cart');
-        Requests.postRequest('/cart/', data, function(response){
+        console.log($scope.product.id);
+        var data = {product_id: $scope.product.id};
+        Requests.postRequest('/cart/', data, function(response) {
+            console.log(['Added To Cart', response]);
             $scope.cart = response;
-            $location.url('/cart');
+            window.location = '/cart/';
         });
     };
 }
