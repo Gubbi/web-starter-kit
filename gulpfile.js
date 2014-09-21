@@ -41,13 +41,13 @@ var AUTOPREFIXER_BROWSERS = [
 ];
 
 // Lint JavaScript
-//gulp.task('jshint', function () {
-//  return gulp.src('app/scripts/**/*.js')
-//    .pipe(reload({stream: true, once: true}))
-//    .pipe($.jshint())
-//    .pipe($.jshint.reporter('jshint-stylish'))
-//    .pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
-//});
+gulp.task('jshint', function () {
+  return gulp.src('app/scripts/**/*.js')
+    .pipe(reload({stream: true, once: true}))
+    .pipe($.jshint())
+    .pipe($.jshint.reporter('jshint-stylish'))
+    .pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
+});
 
 // Optimize Images
 gulp.task('images', function () {
@@ -147,13 +147,14 @@ gulp.task('serve', ['styles'], function () {
     // Run as an https by uncommenting 'https: true'
     // Note: this uses an unsigned certificate which on first access
     //       will present a certificate warning in the browser.
-    // https: true,
-    server: ['.tmp', 'app']
+    https: true,
+//    server: ['.tmp', 'app']
+      proxy: 'vaathsalya.localhost:8082'
   });
 
   gulp.watch(['app/**/*.html'], reload);
   gulp.watch(['app/styles/**/*.{scss,css}'], ['styles', reload]);
-//  gulp.watch(['app/scripts/**/*.js'], ['jshint']);
+  gulp.watch(['app/scripts/**/*.js'], ['jshint']);
   gulp.watch(['app/images/**/*'], reload);
 });
 
@@ -171,7 +172,7 @@ gulp.task('serve:dist', ['default'], function () {
 
 // Build Production Files, the Default Task
 gulp.task('default', ['clean'], function (cb) {
-//  runSequence('styles', ['jshint', 'html', 'images', 'fonts', 'copy'], cb);
+  runSequence('styles', ['jshint', 'html', 'images', 'fonts', 'copy'], cb);
   runSequence('styles', ['html', 'images', 'fonts', 'copy'], cb);
 });
 

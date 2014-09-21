@@ -43,7 +43,7 @@
         </h1>
         <section class="app-bar-actions">
             <!-- Put App Bar Buttons Here -->
-            <button ng-click="toCart()"><i class="icomoon-cart"></i></button>
+
         </section>
     </div>
 </header>
@@ -51,9 +51,11 @@
 <nav class="navdrawer-container promote-layer">
     <h4>Navigation</h4>
     <ul>
-        <li><a href="#hello">Hello</a></li>
-        <li><a href="#get-started">Get Started</a></li>
-        <li><a href="styleguide.html">Style Guide</a></li>
+        <a href="#" ng-click="categoryList(cat)">cat</a>
+        <li ng-repeat="cat in categories">
+            <a href="#" ng-click="categoryList(cat)">cat</a>
+        </li>
+        <li><a href="#" ng-click="toCart()" title="Shopping Cart"><i style="margin-top:2px;" class="icomoon-cart"></i></a></li>
     </ul>
 </nav>
 
