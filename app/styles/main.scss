@@ -245,7 +245,8 @@ main {
   .app-bar-container {
     display: block;
     height: 130px;
-    max-width: 864px;
+    width: 85%;
+    max-width: 1200px;
     padding: 0 16px;
     box-sizing: border-box;
     background-color: #4285f4;
@@ -295,7 +296,8 @@ main {
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
-    max-width: 864px;
+    width: 85%;
+    max-width: 1200px;
     margin: 0 auto;
     -webkit-flex-direction: row;
         -ms-flex-direction: row;
@@ -307,7 +309,8 @@ main {
   }
 
   main {
-    max-width: 864px;
+    width: 85%;
+    max-width: 1200px;
     padding-top: 0;
     min-height: initial;
   }

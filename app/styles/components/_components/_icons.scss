@@ -145,3 +145,68 @@ $icon-user-input: '\e018';
 .icon-user-input::before {
   content: '\e018';
 }
+
+
+@font-face {
+	font-family: 'icomoon';
+	src:url('../images/icons/icomoon.eot?pt9rbg');
+	src:url('../images/icons/icomoon.eot?#iefixpt9rbg') format('embedded-opentype'),
+		url('../images/icons/icomoon.woff?pt9rbg') format('woff'),
+		url('../images/icons/icomoon.ttf?pt9rbg') format('truetype'),
+		url('../images/icons/icomoon.svg?pt9rbg#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="icomoon-"], [class*=" icomoon-"] {
+	font-family: 'icomoon';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+$icomoon-cart: '\e600';
+.icomoon-cart:before {
+	content: "\e600";
+}
+
+$icomoon-credit: '\e601';
+.icomoon-credit:before {
+	content: "\e601";
+}
+
+$icomoon-leaf: '\e602';
+.icomoon-leaf:before {
+	content: "\e602";
+}
+
+$icomoon-mail: '\e603';
+.icomoon-mail:before {
+	content: "\e603";
+}
+
+$icomoon-googleplus: '\e604';
+.icomoon-googleplus:before {
+	content: "\e604";
+}
+
+$icomoon-facebook: '\e605';
+.icomoon-facebook:before {
+	content: "\e605";
+}
+
+$icomoon-twitter: '\e606';
+.icomoon-twitter:before {
+	content: "\e606";
+}
+
+$icomoon-truck: '\e607';
+.icomoon-truck:before {
+	content: "\e607";
+}
