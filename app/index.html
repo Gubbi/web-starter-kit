@@ -28,6 +28,7 @@
 
     <!-- Page styles -->
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="http://yui.yahooapis.com/combo?pure/0.5.0/base-min.css&pure/0.5.0/grids-min.css&pure/0.5.0/grids-responsive-min.css">
 </head>
 <body ng-app="shop" ng-controller="HomeCtrl">
 <header class="app-bar promote-layer">
@@ -35,7 +36,7 @@
         <button class="menu"><img src="images/hamburger.svg" alt="Menu"></button>
         <h1 class="logo">
             <div ng-if="merchant.logo">
-                <img src="{{ merchant.logo }}" title="{{ merchant.name }}" style="max-height:100px;"/>
+                <img src="{{ merchant.logo }}" title="{{ merchant.name }}" style="max-height: 65%;"/>
             </div>
             <div ng-if="!merchant.logo">
                 {{ merchant.name }}
@@ -51,22 +52,81 @@
 <nav class="navdrawer-container promote-layer">
     <h4>Navigation</h4>
     <ul>
-        <a href="#" ng-click="categoryList(cat)">cat</a>
-        <li ng-repeat="cat in categories">
-            <a href="#" ng-click="categoryList(cat)">cat</a>
+        <li ng-class="{active: activeCategory == 'Featured'}"><a href="#" ng-click="categoryList('Featured')">Featured</a></li>
+        <li ng-repeat="cat in categories | filter:'!Featured'" ng-class="{active: activeCategory == cat}">
+            <a href="#" ng-click="categoryList(cat)">{{cat}}</a>
         </li>
-        <li><a href="#" ng-click="toCart()" title="Shopping Cart"><i style="margin-top:2px;" class="icomoon-cart"></i></a></li>
+        <li><a href="#" ng-click="toCart()" title="Shopping Cart"><i style="vertical-align: middle;" class="icomoon-cart"></i></a></li>
     </ul>
 </nav>
 
 <main>
-    <ng-view></ng-view>
+    <div class="pure-g" ng-controller="CtgCtrl">
+        <div class="pure-u-1 pure-u-md-1-3 pure-u-lg-1-3 pure-u-xl-1-3" ng-repeat="product in productList">
+            <div class="product thumbnail" style="padding:2em 2em 2.5em;">
+                <a class="product_link" href="#" ng-click="showProduct(product.short_code)">
+                    <div class="image_detail">
+                        <img class="pure-img" src="http://lorempixel.com/350/500/fashion/"/>
+                    </div>
+                    <div class="details">
+                        <div class="name medium color--text" style="text-decoration: no-underline;">
+                            {{product.name}}
+                        </div>
+                        <div style="text-align: right;">
+                            <span class="color--remember medium" ng-if="!product.unit_price">
+                                <small></small>Enquire
+                            </span>
+                            <span class="color--highlight large" ng-if="product.unit_price">
+                                <span class="color--danger medium" ng-if="product.mrp"><strike><small>&#8377;</small> {{product.mrp}}</strike></span>
+                                 <small>&#8377;</small> {{product.unit_price}}
+                            </span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
 
-    <h1 id="hello">Hello!</h1>
-    <p>Welcome to Web Starter Kit.</p>
+    <div class="pure-g" ng-controller="PdtCtrl">
+##                <div class="pure-u-1 pure-u-md-1-3 pure-u-lg-1-3 pure-u-xl-1-3" style="padding: 2px 0 100px;">
+                <div class="pure-u-1 pure-u-md-1-3 pure-u-lg-1-3 pure-u-xl-1-4 centered">
+                    <img class="pure-img" src="http://lorempixel.com/350/500/fashion/" ng-if="product.photo[0]">
+                    <br/>
+                    <h4>Browse Other Products In:</h4>
+                    <ul>
+                        <li ng-repeat="category in product.categories"> <a href="#" ng-click="categoryList(category)">{{category}}</a></li>
+                    </ul>
+                </div>
+                <div class="pure-u-1 pure-u-md-2-3 pure-u-lg-2-3 pure-u-xl-3-4">
+                    <h2>{{product.name}}</h2>
+                </div>
+            </div>
+        </div>
 
-    <h2 id="get-started">Get Started.</h2>
-    <p>Read how to <a href="http://developers.google.com/web/starter-kit">Get Started</a> or check out the <a href="styleguide.html">Style Guide</a>.</p>
+        <div class="pure-u-1 pure-u-md-1-3 pure-u-lg-1-3 pure-u-xl-1-3">
+            <div class="product thumbnail" style="padding:2em 2em 2.5em;">
+                <a class="product_link" href="#" ng-click="showProduct(product.short_code)">
+                    <div class="image_detail">
+                        <img class="pure-img" src="http://lorempixel.com/350/500/fashion/"/>
+                    </div>
+                    <div class="details">
+                        <div class="name medium color--text" style="text-decoration: no-underline;">
+                            {{product.name}}
+                        </div>
+                        <div style="text-align: right;">
+                            <span class="color--remember medium" ng-if="!product.unit_price">
+                                <small></small>Enquire
+                            </span>
+                            <span class="color--highlight large" ng-if="product.unit_price">
+                                <span class="color--danger medium" ng-if="product.mrp"><strike><small>&#8377;</small> {{product.mrp}}</strike></span>
+                                 <small>&#8377;</small> {{product.unit_price}}
+                            </span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
 </main>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>

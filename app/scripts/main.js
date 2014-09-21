@@ -104,10 +104,11 @@ app.service('Requests', function() {
     };
 });
 
-function HomeCtrl($scope, $location, Requests) {
+function HomeCtrl($scope, $rootScope, $location, Requests) {
     'use strict';
 
     $scope.categories = [];
+    $scope.activeCategory = 'Featured';
 
     Requests.getRequest('/general_details', function(response) {
         console.log(response);
@@ -115,46 +116,55 @@ function HomeCtrl($scope, $location, Requests) {
         $.each(response.categories, function(key, value) {
             $scope.categories.push(key);
         });
+        $rootScope.$broadcast('categorySet', {category: 'Featured'});
     });
 
     $scope.categoryList = function (cat) {
-        $location.url('/category/' + cat);
-    };
-
-    $scope.toCart = function() {
-        $location.url('/cart');
+        $scope.activeCategory = cat;
+        $rootScope.$broadcast('categorySet', {category: cat});
     };
 }
 
-function CtgCtrl($scope, $location, $routeParams, Requests) {
+function CtgCtrl($scope, $rootScope, $location, $routeParams, Requests) {
     'use strict';
 
-    var cat = $routeParams.cat;
-    console.log('Redirected');
-    console.log('/category/'+cat);
+    $scope.refreshProductList = function(category) {
+        Requests.getRequest('/category/'+category, function(data) {
+            console.log(data);
+            $scope.productList = data.products;
+        });
+    };
 
-    Requests.getRequest('/category/'+cat, function(data) {
-        $scope.productList = data;
+    $scope.refreshProductList($scope.activeCategory);
+
+    $scope.$on('categorySet', function(event, args) {
+        console.log('Category Set Event Received');
+        $scope.refreshProductList(args.category);
     });
+
+    $scope.showProduct = function(shortCode) {
+        $rootScope.$broadcast('productSet', {shortCode: shortCode});
+    };
 
     //Sorting start
-    var hash = {'Lowest first': 'unit_price', 'Highest first': '-unit_price', 'Popular': ''};
-    $scope.ordering = hash[$scope.sort];
-
-    $scope.productDetails = function(shortCode) {
-        $location.url('/product/'+shortCode);
-    };
+//    var hash = {'Lowest first': 'unit_price', 'Highest first': '-unit_price', 'Popular': ''};
+//    $scope.ordering = hash[$scope.sort];
+//
+//    $scope.productDetails = function(shortCode) {
+//        $location.url('/product/'+shortCode);
+//    };
 }
 
-function PdtCtrl($scope, $location, $routeParams, Requests) {
+function PdtCtrl($scope, $location, Requests) {
     'use strict';
 
-    Requests.getRequest('/'+$routeParams.shortCode, function(data) {
-        $scope.pdt = data;
+    $scope.$on('productSet', function(event, args) {
+        Requests.getRequest('/'+args.shortCode, function(data) {
+            $scope.product = data;
+        });
     });
-    console.log('Details');
 
-    $scope.addCart = function(){
+    $scope.addCart = function() {
         console.log('Add Cart');
         console.log($scope.pdt.productId);
         var data = {productId: $scope.pdt.productId};
@@ -168,25 +178,25 @@ function PdtCtrl($scope, $location, $routeParams, Requests) {
     };
 }
 
-function CartCtrl($scope, $location, Requests) {
-    'use strict';
-
-    Requests.getRequest('/cart/', function(data) {
-        $scope.cart = data;
-    });
-
-    $scope.updateCart = function(quantity, productId, remove) {
-        Requests.postRequest('/update_amount/', {
-                'productId': productId,
-                'remove_product': remove,
-                'quantity': quantity
-            }, function(data) {
-                $scope.cart = data;
-            }
-        );
-    };
-
-    $scope.checkout = function(){
-        window.location = '/checkout';
-    };
-}
+//function CartCtrl($scope, $location, Requests) {
+//    'use strict';
+//
+//    Requests.getRequest('/cart/', function(data) {
+//        $scope.cart = data;
+//    });
+//
+//    $scope.updateCart = function(quantity, productId, remove) {
+//        Requests.postRequest('/update_amount/', {
+//                'productId': productId,
+//                'remove_product': remove,
+//                'quantity': quantity
+//            }, function(data) {
+//                $scope.cart = data;
+//            }
+//        );
+//    };
+//
+//    $scope.checkout = function(){
+//        window.location = '/checkout';
+//    };
+//}

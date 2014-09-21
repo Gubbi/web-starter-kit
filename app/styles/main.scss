@@ -223,6 +223,11 @@ main {
   background-color: rgba(255, 255, 255, 0.4);
 }
 
+.navdrawer-container ul li.active a {
+  font-weight: 400;
+  border-bottom: 2px solid $colorRed;
+}
+
 main {
   margin: 0 auto;
   /* Height of the header */
@@ -366,4 +371,13 @@ main {
   font-weight: 700;
   src: url(/fonts/RobotoCondensed-BoldItalic.eot);
   src: local('Roboto Condensed Bold Italic'), local('RobotoCondensed-BoldItalic'), url(/fonts/RobotoCondensed-BoldItalic.eot) format('embedded-opentype'), url(/fonts/RobotoCondensed-BoldItalic.woff) format('woff');
+}
+
+.name a:visited, .name a:link, a .name {
+  text-decoration: none !important;
+}
+
+.thumbnail:hover {
+  border:1px solid $colorIndigo50;
+  background-color: $colorGrayLighter;
 }
