@@ -190,8 +190,9 @@
         if($rootScope.is_fb_store) {
             window.fbAsyncInit = function() {
                 FB.init({
-                    appId : '${config.FB_APP_ID}', //Your facebook APP here
-                    cookie : true // enable cookies to allow the server to access the session
+                    appId   : '${config.FB_APP_ID}', //Your facebook APP here
+                    cookie  : false,
+                    version : 'v2.1'
                 });
             };
 

@@ -157,6 +157,7 @@ function PdtCtrl($scope, $rootScope, $location, Requests) {
         var data = {product_id: $scope.product.id, merchant: $rootScope.merchant.id};
         Requests.postRequest('/cart/', data, function(response) {
             $scope.cart = response;
+
             var url = 'http://';
             if ($rootScope.merchant.custom_domain.trim() != '') {
                 url += $rootScope.merchant.custom_domain.trim() + '/';
