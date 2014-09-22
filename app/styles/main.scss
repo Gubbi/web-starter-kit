@@ -40,7 +40,7 @@ body.open {
   position: fixed;
   top: 0;
   left: 0;
-//  background-color: #4285f4;
+  background-color: white;
   overflow: hidden;
   z-index: 1;
 }
@@ -50,7 +50,7 @@ body.open {
   display: -ms-flexbox;
   display: flex;
   width: 100%;
-  height: 60px;
+  height: 90px;
   position: relative;
   -webkit-flex-direction: row;
       -ms-flex-direction: row;
@@ -69,7 +69,7 @@ body.open {
       -ms-flex: 1;
           flex: 1;
   font-size: 2em;
-  line-height: 60px;
+  line-height: 75px;
   margin: 0 16px;
   padding: 0;
   color: #fefefe;
@@ -174,9 +174,10 @@ main {
 
 .navdrawer-container h4,
 .navdrawer-container ul li a {
-  height: 60px;
-  padding: 17px 20px;
+  height: 40px;
+  padding: 9px 20px;
   line-height: 1.4;
+  font-size: 0.9em;
 }
 
 .navdrawer-container h4 {
@@ -236,7 +237,7 @@ main {
 }
 
 /** Larger Screens - desktops and tablets **/
-@media all and (min-width: 990px) {
+@media all and (min-width: 700px) {
   .app-bar {
     position: relative;
   }
@@ -249,19 +250,27 @@ main {
 
   .app-bar-container {
     display: block;
-    height: 130px;
+    height: 90px;
     width: 85%;
-    max-width: 1200px;
+    max-width: 1300px;
     padding: 0 16px;
     box-sizing: border-box;
-//    background-color: #4285f4;
+    background-color: white;
+  }
+
+  .main-footer__container {
+    display: block;
+    width: 85%;
+    max-width: 1300px;
+    margin:0 auto;
+    box-sizing: border-box;
   }
 
   .app-bar .logo {
     float: left;
     margin: 0;
     padding: 0;
-    line-height: 130px;
+    line-height: 75px;
     font-size: 46px;
   }
 
@@ -302,7 +311,7 @@ main {
     display: -ms-flexbox;
     display: flex;
     width: 85%;
-    max-width: 1200px;
+    max-width: 1300px;
     margin: 0 auto;
     -webkit-flex-direction: row;
         -ms-flex-direction: row;
@@ -315,7 +324,7 @@ main {
 
   main {
     width: 85%;
-    max-width: 1200px;
+    max-width: 1300px;
     padding-top: 0;
     min-height: initial;
   }
@@ -373,11 +382,37 @@ main {
   src: local('Roboto Condensed Bold Italic'), local('RobotoCondensed-BoldItalic'), url(/fonts/RobotoCondensed-BoldItalic.eot) format('embedded-opentype'), url(/fonts/RobotoCondensed-BoldItalic.woff) format('woff');
 }
 
-.name a:visited, .name a:link, a .name {
-  text-decoration: none !important;
-}
-
 .thumbnail:hover {
   border:1px solid $colorIndigo50;
-  background-color: $colorGrayLighter;
+  background-color: #f0f0f0;
+}
+
+.main-footer {
+  background: #404040;
+  padding: 26px 0 52px;
+  padding-top: 52px;
+  color: #fff;
+  margin-top: 120px;
+}
+
+.main-footer a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.main-footer li {
+  list-style-type: none;
+}
+
+.main-footer li::before {
+  content: '';
+}
+
+.main-footer__list {
+  font-size:13px;
+  line-height:26px;
+  padding-top:13px;
+  list-style: none;
+  padding-right:30px;
+  border-right: 1px solid #737373;
 }

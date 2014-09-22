@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Web Starter Kit</title>
+    <title>${c.merchant.name}</title>
 
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -35,12 +35,14 @@
     <div class="app-bar-container">
         <button class="menu"><img src="images/hamburger.svg" alt="Menu"></button>
         <h1 class="logo">
-            <div ng-if="merchant.logo">
-                <img src="{{ merchant.logo }}" title="{{ merchant.name }}" style="max-height: 65%;"/>
-            </div>
-            <div ng-if="!merchant.logo">
-                {{ merchant.name }}
-            </div>
+            <a href="/" style="text-decoration: none !important;">
+                <div ng-if="merchant.logo">
+                    <img src="{{ merchant.logo }}" title="{{ merchant.name }}" style="max-height: 65%;"/>
+                </div>
+                <div ng-if="!merchant.logo">
+                    {{ merchant.name }}
+                </div>
+            </a>
         </h1>
         <section class="app-bar-actions">
             <!-- Put App Bar Buttons Here -->
@@ -62,22 +64,22 @@
 
 <main>
     <div id="products_list" class="pure-g" ng-controller="CtgCtrl">
-        <div class="pure-u-1 pure-u-md-1-3 pure-u-lg-1-3 pure-u-xl-1-3" ng-repeat="product in productList">
-            <div class="product thumbnail" style="padding:2em 2em 2.5em;">
-                <a class="product_link" href="#" ng-click="showProduct(product)">
+        <div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4 pure-u-xl-1-5" ng-repeat="product in productList">
+            <div class="product thumbnail" style="padding:2em 2em 1.5em; margin-bottom:0.5em;">
+                <a class="product_link" href="#" ng-click="showProduct(product)" style="text-decoration: none !important;">
                     <div class="image_detail">
-                        <img class="pure-img" src="{{ product.photo[0][2] }}"/>
+                        <img class="pure-img" src="http://lorempixel.com/350/500/fashion/"/>
                     </div>
                     <div class="details">
-                        <div class="name medium color--text" style="text-decoration: no-underline;">
+                        <div class="name small color--text">
                             {{product.name}}
                         </div>
-                        <div style="text-align: right;">
-                            <span class="color--remember medium" ng-if="!product.unit_price">
+                        <div style="text-align: right; padding-top:0.8em;">
+                            <span class="color--remember base" ng-if="!product.unit_price">
                                 <small></small>Enquire
                             </span>
-                            <span class="color--highlight large" ng-if="product.unit_price">
-                                <span class="color--danger medium" ng-if="product.mrp"><strike><small>&#8377;</small> {{product.mrp}}</strike></span>
+                            <span class="color--highlight medium" ng-if="product.unit_price">
+                                <span class="color--danger base" ng-if="product.mrp"><strike><small>&#8377;</small> {{product.mrp}}</strike></span>
                                  <small>&#8377;</small> {{product.unit_price}}
                             </span>
                         </div>
@@ -88,33 +90,33 @@
     </div>
 
     <div id="product_board" class="pure-g" ng-controller="PdtCtrl" hidden style="padding:2em 0;">
-        <div class="pure-u-1 pure-u-md-1-3 pure-u-lg-1-3 pure-u-xl-1-4 centered">
-            <img class="pure-img" src="{{product.photo[0][1]}}" ng-if="product.photo[0]">
+        <div class="pure-u-1 pure-u-sm-1-3 pure-u-md-1-3 pure-u-lg-2-5 pure-u-xl-2-5 centered">
+            <img class="pure-img" src="http://lorempixel.com/350/500/fashion/" ng-if="product.photo[0]">
             <br/>
             <div class="small color--remember" style="text-align: left;">Browse Other Products In:</div>
             <ul class="small color--learning" style="text-align: left; padding:0;">
                 <li ng-repeat="category in product.categories"> <a class="color--learning" href="#" ng-click="categoryList(category)">{{category}}</a></li>
             </ul>
         </div>
-        <div class="pure-u-1 pure-u-md-2-3 pure-u-lg-2-3 pure-u-xl-3-4" style="padding-left:2.5em">
-            <div class="xxlarge" style="padding-top:0;">{{product.name}}</div>
+        <div class="pure-u-1 pure-u-sm-2-3 pure-u-md-2-3 pure-u-lg-3-5 pure-u-xl-3-5" style="padding-left:2.5em">
+            <div class="large">{{product.name}}</div>
             <p ng-if="product.units_available > 0" class="color--user" style="margin-top:0; padding-left:5px;">In Stock</p>
             <p ng-if="product.units_available <= 0" class="color--danger" style="margin-top:0; padding-left:5px;">Out Of Stock</p>
 
             <br/>
             <div ng-if="is_purchasable">
                 <div class="pure-g">
-                    <div class="pure-u-1-2 pure-u-md-1-3 pure-u-lg-1-4" style=" padding:12px 5px;">
-                        <span class="color--highlight xlarge">
-                            <span class="color--danger medium" ng-if="product.mrp"><strike><small>&#8377;</small> {{product.mrp}}</strike></span>
+                    <div class="pure-u-1-2 pure-u-md-1-3 pure-u-lg-1-4" style="padding:12px 5px; margin: 13px 0;">
+                        <span class="color--highlight medium">
+                            <span class="color--danger base" ng-if="product.mrp"><strike><small>&#8377;</small> {{product.mrp}}</strike></span>
                             <span style="width:60px;"></span>
                             <small>&#8377;</small> {{product.unit_price}}
                         </span>
                     </div>
                     <div class="pure-u-1-2 pure-u-md-2-3 pure-u-lg-3-4">
-                        <button class="button--primary large" ng-click="addCart()"> <i class="icomoon-cart"> </i> Add to Cart</button>
-                        <div class="color--remember medium" style="padding-top: 0;">
-                            <small>Free shipping available if total purchase amount is more than <span style="white-space: nowrap;"> <small>&#8377;</small> 1000</span></small>
+                        <button class="button--primary base" ng-click="addCart()"> <i class="icomoon-cart"> </i> Add to Cart</button>
+                        <div class="color--remember base" style="padding-top: 0;">
+                            <!--<small>Free shipping available if total purchase amount is more than <span style="white-space: nowrap;"> <small>&#8377;</small> 1000</span></small>-->
                         </div>
                     </div>
                 </div>
@@ -123,6 +125,30 @@
     </div>
 </main>
 
+<footer class="main-footer">
+    <div class="main-footer__container container clear">
+        <div class="pure-g main-footer__list-group">
+            <div class="pure-u-1 pure-u-sm-1-3 pure-u-md-1-4" style="text-align: right">
+                <ul class="main-footer__list">
+                    <li><a href="/privacy_policy">Privacy Policy</a></li>
+                    <li><a href="/terms_of_use">Terms of Use</a></li>
+                    <li><a href="/delivery">Delivery</a></li>
+                    <li><a href="/cancellations_and_returns">Cancellations and Returns</a></li>
+                    <li><a href="/refunds">Refunds</a></li>
+                    <li><a href="/disclaimer">Disclaimer</a></li>
+                </ul>
+            </div>
+            <div class="pure-u-1 pure-u-sm-1-3 pure-u-md-1-2" style="text-align: justify">
+                <div class="large centered color--muted">About US</div>
+                <p class="base">${c.merchant.description}</p>
+            </div>
+            <div class="pure-u-1 pure-u-sm-1-3 pure-u-md-1-4" style="text-align: left; padding-left:30px; border-left: 1px solid #aaa;">
+                <div>${c.org.registered_address.street}</div>
+                <div>${c.org.registered_address.city} - ${c.org.registered_address.pincode}</div>
+            </div>
+        </div>
+    </div>
+</footer>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
