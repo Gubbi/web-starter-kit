@@ -53,7 +53,10 @@
                 url += $rootScope.merchant.short_code.trim() + '.kyash.com/';
             }
             url += 'cart/?cart_id=' + $rootScope.cart_id;
+
+            console.log(url, $rootScope.is_fb_store);
             if($rootScope.is_fb_store) {
+                console.log('Opening new window.');
                 window.open(url);
             }
             else {
