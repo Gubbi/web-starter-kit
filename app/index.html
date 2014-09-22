@@ -61,7 +61,7 @@
         </li>
         <li style="position:absolute; right:2%;">
             <div class="notify_container">
-                <a href="/cart/" title="Shopping Cart"> <i style="vertical-align: middle;" class="icomoon-cart"></i></a>
+                <a href="#" title="Shopping Cart" ng-click="go_to_cart();"> <i style="vertical-align: middle;" class="icomoon-cart"></i></a>
                 <div class="notify_bubble" ng-class="{hidden: cart_item_count <= 0}">${c.cart_item_count}</div>
             </div>
         </li>
@@ -175,7 +175,8 @@
                 custom_domain: '${c.merchant.custom_domain or ""}'
             },
             is_fb_store: ${'true' if c.is_fb_store else 'false'},
-            cart_item_count: ${c.cart_item_count}
+            cart_item_count: ${c.cart_item_count},
+            cart_id: '${c.cart_order.key.id() if c.cart_order else ""}'
         };
         return {
             $get: function () {
@@ -186,6 +187,7 @@
         $rootScope.merchant = KyashConstants.merchant;
         $rootScope.is_fb_store = KyashConstants.is_fb_store;
         $rootScope.cart_item_count = KyashConstants.cart_item_count;
+        $rootScope.cart_id = KyashConstants.cart_id;
 
         if($rootScope.is_fb_store) {
             window.fbAsyncInit = function() {
@@ -207,6 +209,23 @@
                 js.src = "//connect.facebook.net/en_US/sdk.js";
                 fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'facebook-jssdk'));
+        }
+
+        $rootScope.go_to_cart = function() {
+            var url = 'http://';
+            if ($rootScope.merchant.custom_domain.trim() != '') {
+                url += $rootScope.merchant.custom_domain.trim() + '/';
+            }
+            else {
+                url += $rootScope.merchant.short_code.trim() + '.kyash.com/';
+            }
+            url += 'cart/?cart_id=' + $rootScope.cart_id;
+            if($rootScope.is_fb_store) {
+                window.open(url);
+            }
+            else {
+                window.location = url;
+            }
         }
     });
 </script>

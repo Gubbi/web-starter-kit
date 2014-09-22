@@ -157,17 +157,8 @@ function PdtCtrl($scope, $rootScope, $location, Requests) {
         var data = {product_id: $scope.product.id, merchant: $rootScope.merchant.id};
         Requests.postRequest('/cart/', data, function(response) {
             $scope.cart = response;
-
-            var url = 'http://';
-            if ($rootScope.merchant.custom_domain.trim() != '') {
-                url += $rootScope.merchant.custom_domain.trim() + '/';
-            }
-            else {
-                url += $rootScope.merchant.short_code.trim() + '.kyash.com/';
-            }
-            url += 'cart/?cart_id='+response.cart_id;
-            console.log(url);
-//            window.location = url;
+            $rootScope.cart_id = response.cart_id;
+            $rootScope.go_to_cart();
         });
     };
 }
