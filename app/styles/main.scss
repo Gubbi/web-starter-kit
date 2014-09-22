@@ -411,19 +411,25 @@ main {
 .main-footer__list {
   font-size:13px;
   line-height:26px;
-  padding-top:13px;
+  padding-top: 2em;
+  margin: 1em 0;
   list-style: none;
   padding-right:30px;
-  border-right: 1px solid #737373;
 }
 
 .main-footer__contacts {
   font-size:13px;
   line-height:26px;
-  padding-top:13px;
+  padding-top: 2em;
+  margin: 1em 0;
   padding-left:30px;
-  border-left: 1px solid #737373;
   text-align: left;
+}
+
+#footer_about {
+  border-left: 1px solid #737373;
+  border-right: 1px solid #737373;
+  min-height: 200px;
 }
 
 #notify_container {
