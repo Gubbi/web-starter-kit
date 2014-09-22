@@ -93,7 +93,6 @@ function HomeCtrl($scope, $rootScope, $location, Requests) {
     $scope.activeCategory = 'Featured';
 
     Requests.getRequest('/general_details', function(response) {
-        console.log(response);
         $scope.merchant = response;
         $.each(response.categories, function(key, value) {
             $scope.categories.push(key);
@@ -112,15 +111,19 @@ function CtgCtrl($scope, $rootScope, $location, $routeParams, Requests) {
 
     $scope.refreshProductList = function(category) {
         Requests.getRequest('/category/'+category, function(data) {
-            console.log(['Category Data', data]);
             $scope.productList = data.products;
+
+            if(!$('#products_list').is(":visible")) {
+                $('#product_board').fadeOut('slow', function() {
+                    $('#products_list').fadeIn();
+                });
+            }
         });
     };
 
     $scope.refreshProductList($scope.activeCategory);
 
     $scope.$on('categorySet', function(event, args) {
-        console.log('Category Set Event Received');
         $scope.refreshProductList(args.category);
     });
 
@@ -150,11 +153,8 @@ function PdtCtrl($scope, $location, Requests) {
     });
 
     $scope.addCart = function() {
-        console.log('Add Cart');
-        console.log($scope.product.id);
         var data = {product_id: $scope.product.id};
         Requests.postRequest('/cart/', data, function(response) {
-            console.log(['Added To Cart', response]);
             $scope.cart = response;
             window.location = '/cart/';
         });
