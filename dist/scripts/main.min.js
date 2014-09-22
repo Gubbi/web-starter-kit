@@ -54,7 +54,7 @@ var app = angular.module('shop', ['ngRoute']);
 app.service('Requests', function() {
     'use strict';
 
-    this.getRequest = function(url, success) {
+    this.getRequest = function(url, data, success) {
         $.ajax({
             url: url,
             type: 'GET',
@@ -92,7 +92,7 @@ function HomeCtrl($scope, $rootScope, $location, Requests) {
     $scope.categories = [];
     $scope.activeCategory = 'Featured';
 
-    Requests.getRequest('/general_details', function(response) {
+    Requests.getRequest('/general_details', {merchant: $rootScope.merchant.id}, function(response) {
         $scope.merchant = response;
         $.each(response.categories, function(key, value) {
             $scope.categories.push(key);
@@ -110,7 +110,8 @@ function CtgCtrl($scope, $rootScope, $location, $routeParams, Requests) {
     'use strict';
 
     $scope.refreshProductList = function(category) {
-        Requests.getRequest('/category/'+category, function(data) {
+        console.log($rootScope.merchant);
+        Requests.getRequest('/category/'+category, {merchant: $rootScope.merchant.id}, function(data) {
             $scope.productList = data.products;
 
             if(!$('#products_list').is(":visible")) {
@@ -140,7 +141,7 @@ function CtgCtrl($scope, $rootScope, $location, $routeParams, Requests) {
 //    };
 }
 
-function PdtCtrl($scope, $location, Requests) {
+function PdtCtrl($scope, $rootScope, $location, Requests) {
     'use strict';
 
     $scope.$on('productSet', function(event, args) {
@@ -153,7 +154,7 @@ function PdtCtrl($scope, $location, Requests) {
     });
 
     $scope.addCart = function() {
-        var data = {product_id: $scope.product.id};
+        var data = {product_id: $scope.product.id, merchant: $rootScope.merchant.id};
         Requests.postRequest('/cart/', data, function(response) {
             $scope.cart = response;
             window.location = '/cart/';
