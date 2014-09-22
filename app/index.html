@@ -58,7 +58,12 @@
         <li ng-repeat="cat in categories | filter:'!Featured'" ng-class="{active: activeCategory == cat}">
             <a href="#" ng-click="categoryList(cat)">{{cat}}</a>
         </li>
-        <li style="position:absolute; right:2%;"><a href="#" ng-click="toCart()" title="Shopping Cart"><i style="vertical-align: middle;" class="icomoon-cart"></i></a></li>
+        <li style="position:absolute; right:2%;">
+            <div class="notify_container">
+                <a href="/cart/" title="Shopping Cart"> <i style="vertical-align: middle;" class="icomoon-cart"></i></a>
+                <div class="notify_bubble">${c.cart_item_count}</div>
+            </div>
+        </li>
     </ul>
 </nav>
 
@@ -68,7 +73,7 @@
             <div class="product thumbnail" style="padding:2em 2em 1.5em; margin-bottom:0.5em;">
                 <a class="product_link" href="#" ng-click="showProduct(product)" style="text-decoration: none !important;">
                     <div class="image_detail">
-                        <img class="pure-img" src="http://lorempixel.com/350/500/fashion/"/>
+                        <img class="pure-img" src="{{ product.photo[0][2] }}"/>
                     </div>
                     <div class="details">
                         <div class="name small color--text">
@@ -79,7 +84,7 @@
                                 <small></small>Enquire
                             </span>
                             <span class="color--highlight medium" ng-if="product.unit_price">
-                                <span class="color--danger base" ng-if="product.mrp"><strike><small>&#8377;</small> {{product.mrp}}</strike></span>
+                                <span class="color--danger" style="font-size:0.7em;" ng-if="product.mrp"><strike><small>&#8377;</small> {{product.mrp}}</strike></span>
                                  <small>&#8377;</small> {{product.unit_price}}
                             </span>
                         </div>
@@ -91,7 +96,7 @@
 
     <div id="product_board" class="pure-g" ng-controller="PdtCtrl" hidden style="padding:2em 0;">
         <div class="pure-u-1 pure-u-sm-1-3 pure-u-md-1-3 pure-u-lg-2-5 pure-u-xl-2-5 centered">
-            <img class="pure-img" src="http://lorempixel.com/350/500/fashion/" ng-if="product.photo[0]">
+            <img class="pure-img" src="{{ product.photo[0][1] }}" ng-if="product.photo[0]">
             <br/>
             <div class="small color--remember" style="text-align: left;">Browse Other Products In:</div>
             <ul class="small color--learning" style="text-align: left; padding:0;">
@@ -108,7 +113,7 @@
                 <div class="pure-g">
                     <div class="pure-u-1-2 pure-u-md-1-3 pure-u-lg-1-4" style="padding:12px 5px; margin: 13px 0;">
                         <span class="color--highlight medium">
-                            <span class="color--danger base" ng-if="product.mrp"><strike><small>&#8377;</small> {{product.mrp}}</strike></span>
+                            <span class="color--danger" style="font-size:0.7em;" ng-if="product.mrp"><strike><small>&#8377;</small> {{product.mrp}}</strike></span>
                             <span style="width:60px;"></span>
                             <small>&#8377;</small> {{product.unit_price}}
                         </span>
@@ -126,7 +131,7 @@
 </main>
 
 <footer class="main-footer">
-    <div class="main-footer__container container clear">
+    <div class="main-footer__container clear">
         <div class="pure-g main-footer__list-group">
             <div class="pure-u-1 pure-u-sm-1-3 pure-u-md-1-4" style="text-align: right">
                 <ul class="main-footer__list">
@@ -138,13 +143,15 @@
                     <li><a href="/disclaimer">Disclaimer</a></li>
                 </ul>
             </div>
-            <div class="pure-u-1 pure-u-sm-1-3 pure-u-md-1-2" style="text-align: justify">
-                <div class="large centered color--muted">About US</div>
-                <p class="base">${c.merchant.description}</p>
+            <div class="pure-u-1 pure-u-sm-1-3 pure-u-md-1-2" style="text-align: justify; padding:0 1.5em;">
+                <div class="large centered color--muted">About <strong>${c.merchant.name.title()}</strong></div>
+                <p class="small">${c.merchant.description}</p>
             </div>
-            <div class="pure-u-1 pure-u-sm-1-3 pure-u-md-1-4" style="text-align: left; padding-left:30px; border-left: 1px solid #aaa;">
+            <div class="pure-u-1 pure-u-sm-1-3 pure-u-md-1-4 main-footer__contacts">
+                <div><strong>${c.merchant.name.title()}</strong></div>
                 <div>${c.org.registered_address.street}</div>
                 <div>${c.org.registered_address.city} - ${c.org.registered_address.pincode}</div>
+                <div>+91 ${c.org.registered_address.phone}</div>
             </div>
         </div>
     </div>
@@ -169,18 +176,3 @@
 <!-- Built with love using Web Starter Kit -->
 </body>
 </html>
-
-<!--
-
-TODO:
-
- 1. Make sections for each part. Routes not required, because all views are there is different divs.
- 2. Add transitions, show / hide effects.
- 3. Load Featured Category by default: Show Featured Category as the first category.
- 4. Launch Category view in the main products section: Shows thumbnails, title and price.
- 5. On product click, launch product info overlay.
- 6. On add to cart, show the cart sidebar.
- 7. Add footer as part of general details.
- 8. Look at communication between controllers in ng.
-
--->
