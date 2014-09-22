@@ -59,6 +59,7 @@ app.service('Requests', function() {
             url: url,
             type: 'GET',
             async: false,
+            data: data,
             headers : {'Accept-Encodings': 'json'},
             dataType: 'json',
             error: function(xhr, status, error) { }
@@ -110,7 +111,6 @@ function CtgCtrl($scope, $rootScope, $location, $routeParams, Requests) {
     'use strict';
 
     $scope.refreshProductList = function(category) {
-        console.log($rootScope.merchant);
         Requests.getRequest('/category/'+category, {merchant: $rootScope.merchant.id}, function(data) {
             $scope.productList = data.products;
 
@@ -157,7 +157,16 @@ function PdtCtrl($scope, $rootScope, $location, Requests) {
         var data = {product_id: $scope.product.id, merchant: $rootScope.merchant.id};
         Requests.postRequest('/cart/', data, function(response) {
             $scope.cart = response;
-            window.location = '/cart/';
+            var url = 'http://';
+            if ($rootScope.merchant.custom_domain.trim() != '') {
+                url += $rootScope.merchant.custom_domain.trim() + '/';
+            }
+            else {
+                url += $rootScope.merchant.short_code.trim() + '.kyash.com/';
+            }
+            url += 'cart/?cart_id='+response.cart_id;
+            console.log(url);
+//            window.location = url;
         });
     };
 }
