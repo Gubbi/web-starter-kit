@@ -21,11 +21,6 @@
     <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
     <meta name="msapplication-TileColor" content="#3372DF">
 
-    <!-- SEO: If your mobile URL is different from the desktop URL, add a canonical link to the desktop page https://developers.google.com/webmasters/smartphone-sites/feature-phones -->
-    <!--
-    <link rel="canonical" href="http://www.example.com/">
-    -->
-
     <!-- Page styles -->
     <link rel="stylesheet" href="styles/main.css">
 
@@ -35,32 +30,30 @@
     <link rel="import" href="components/paper-fab/paper-fab.html">
     <link rel="import" href="/scripts/kyash-icons.html">
 </head>
+
 <body ng-app="shop" ng-controller="HomeCtrl" ng-class="{fb_store: is_fb_store}">
+
 <div id="fb-root"></div>
 <kyash-icons></kyash-icons>
+
 <header class="app-bar promote-layer ng-cloak" ng-cloak ng-class="{hidden: is_fb_store}">
     <div class="app-bar-container">
         <button class="menu"><img src="images/hamburger.svg" alt="Menu"></button>
         <h1 class="logo">
-            <div ng-if="merchant.logo">
-                <a href="/"><img ng-src="{{ merchant.logo }}" title="{{ merchant.name }}"/></a>
-            </div>
-            <div ng-if="!merchant.logo">
-                <a href="/">{{ merchant.name }}</a>
-            </div>
+            <a href="/">
+                <img ng-src="{{ merchant.logo }}" title="{{ merchant.name }}" ng-if="merchant.logo" ng-click="window.location.url='/'"/>
+                <span ng-if="!merchant.logo">{{ merchant.name }}</span>
+            </a>
         </h1>
-        <section class="app-bar-actions">
-            <!-- Put App Bar Buttons Here -->
-        </section>
     </div>
 </header>
 
 <nav class="navdrawer-container promote-layer ng-cloak" ng-cloak>
     <h4>Navigation</h4>
     <ul>
-        <li ng-class="{active: activeCategory == 'Featured'}"><a href="#" ng-click="categoryList('Featured')">Featured</a></li>
+        <li ng-class="{active: activeCategory == 'Featured'}"><a href="#" ng-click="categoryList('Featured')">FEATURED</a></li>
         <li ng-repeat="cat in categories | filter:'!Featured'" ng-class="{active: activeCategory == cat}">
-            <a href="#" ng-click="categoryList(cat)">{{cat}}</a>
+            <a href="#" ng-click="categoryList(cat)">{{cat | uppercase}}</a>
         </li>
         <li id="cart_menu_icon">
             <div>
@@ -74,24 +67,31 @@
 <main class="ng-cloak" ng-cloak>
     <div id="products_list" class="pure-g" ng-controller="CtgCtrl">
         <div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4 pure-u-xl-1-4" ng-repeat="product in productList">
-            <div class="product thumbnail" ng-click="showProduct(product)">
-                <div class="image_detail">
+            <div class="product thumbnail" ng-click="showProduct(product)" onmouseover="$(this).find('.thumbnail_shadow').attr('z', '1');" onmouseout="$(this).find('.thumbnail_shadow').attr('z', '0');">
+                <div>
+                    <paper-shadow class="thumbnail_shadow" z="0" animated="true"></paper-shadow>
+                    <div class="image_detail">
                         <!--<img class="pure-img" ng-src="{{ product.photo[0][2] }}"/>-->
-                        <img src="https://unsplash.it/700/300/?random"/>
-                </div>
-                <div class="details">
-                    <div class="name small color--text">
-                        {{product.name}}
+                        <img src="https://unsplash.it/300/450/?random" scalable/>
                     </div>
-                    <div class="price">
-                        <paper-fab icon="k:cart"></paper-fab>
-                        <span class="color--remember base" ng-if="!product.unit_price">
-                            <small></small>Enquire
-                        </span>
-                        <span class="color--highlight medium" ng-if="product.unit_price">
-                            <span class="mrp" ng-if="product.mrp"><strike><small>&#8377;</small> {{product.mrp}}</strike></span>
-                             <small>&#8377;</small> {{product.unit_price}}
-                        </span>
+                    <div class="details">
+                        <div class="name">{{product.name}}</div>
+                        <div class="more pure-g">
+                            <div class="price pure-u-1-2">
+                                <div>
+                                    <div class='mrp'>
+                                        <div ng-if="product.mrp && product.mrp != product.unit_price"><strike>&#8377; {{product.mrp}}</strike></div>
+                                    </div>
+                                    <div ng-if="product.unit_price">
+                                        <i class="icon icon-inr"></i> {{product.unit_price}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="action pure-u-1-2">
+                                <paper-button label="BUY" ng-if="product.unit_price"></paper-button>
+                                <paper-button label="ENQUIRE" ng-if="!product.unit_price"></paper-button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -140,7 +140,7 @@
 
 <footer class="main-footer">
     <div class="main-footer__container clear">
-        <div class="large centered color--muted" style="padding-top: 0;">About <strong>${c.merchant.name.title()}</strong></div>
+        <div class="footer-title"><span class="lead_part">About</span> <span class="brand">${c.merchant.name.title()}</span></div>
         <div class="pure-g main-footer__list-group">
             <div class="pure-u-1 pure-u-sm-1-3 pure-u-md-1-4" style="text-align: right">
                 <ul class="main-footer__list">
@@ -152,18 +152,21 @@
                     <li><a href="/disclaimer">Disclaimer</a></li>
                 </ul>
             </div>
-            <div  id="footer_about" class="pure-u-1 pure-u-sm-1-3 pure-u-md-1-2">
-                <div style="text-align: justify; padding:0 2em;"><p class="small" style="color: #ccc;">${c.merchant.description}</p></div>
+            <div class="pure-u-1 pure-u-sm-1-3 pure-u-md-1-2">
+                <div id="footer_about"><p class="small">${c.merchant.description}</p></div>
             </div>
-            <div class="pure-u-1 pure-u-sm-1-3 pure-u-md-1-4 main-footer__contacts">
-                <div><strong>${c.merchant.name.title()}</strong></div>
-                <div>${c.org.registered_address.street}</div>
-                <div>${c.org.registered_address.city} - ${c.org.registered_address.pincode}</div>
-                <div>+91 ${c.org.registered_address.phone}</div>
+            <div class="pure-u-1 pure-u-sm-1-3 pure-u-md-1-4">
+                <div class="main-footer__contacts">
+                    <div>${c.merchant.name.title()}</div>
+                    <div>${c.org.registered_address.street}</div>
+                    <div>${c.org.registered_address.city} - ${c.org.registered_address.pincode}</div>
+                    <div>+91 ${c.org.registered_address.phone}</div>
+                </div>
             </div>
         </div>
     </div>
 </footer>
+
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>

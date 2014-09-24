@@ -12,7 +12,6 @@
  * Remove if you prefer to use a CSS library, like Bootstrap
  */
 @import '_purejs';
-@import '_roboto_fonts';
 @import 'kyash/kyash';
 
 .pure-g [class *= "pure-u"] {
@@ -328,90 +327,15 @@ main {
 
 .navdrawer-container, .app-bar-container {
   @extend .text-subhead;
+  font-family: 'Roboto Condensed', sans-serif;
   font-weight: 300;
   color: $white;
 }
-
 
 .text-link {
   text-decoration: none;
 }
 
-.thumbnail {
-  padding:2em 1em 1.5em;
-  margin-bottom:0.5em;
-
-  .product_link {
-    @extend .text-link;
-  }
-
-  .price {
-    text-align: right;
-    padding-top:0.8em;
-  }
-
-  &:hover {
-    border: 1px solid #e8eaf6;
-    background-color: #f0f0f0;
-  }
-}
-
-.mrp {
-  color: #737373;
-  @extend .text-caption;
-}
-
-.selling_price, .mrp {
-  white-space: nowrap;
-}
-
-.main-footer {
-  background: $gray800;
-  padding: 26px 0 52px;
-  padding-top: 52px;
-  color: $gray400;
-  margin-top: 120px;
-
-  .main-footer__container {
-    display: block;
-    width: 85%;
-    max-width: 1300px;
-    margin:0 auto;
-    box-sizing: border-box;
-  }
-
-  a {
-    color: $gray400;
-    @extend .text-link;
-  }
-
-  li {
-    list-style-type: none;
-    &::before {
-      content: '';
-    }
-  }
-}
-
-.main-footer__list {
-  padding-top: 2em;
-  margin: 1em 0;
-  list-style: none;
-  padding-right:30px;
-}
-
-.main-footer__contacts {
-  padding-top: 2em;
-  margin: 1em 0;
-  padding-left:30px;
-  text-align: left;
-}
-
-#footer_about {
-  border-left: 1px solid $white10;
-  border-right: 1px solid $white10;
-  min-height: 200px;
-}
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak, .hidden {
     display: none !important;

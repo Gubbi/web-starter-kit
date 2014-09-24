@@ -51,6 +51,24 @@
 
 var app = angular.module('shop', ['ngRoute']);
 
+app.directive('scalable', function() {
+    return {
+        link: function(scope, element, attrs) {
+            element.bind("load" , function(event){
+                var iw = element[0].naturalWidth;
+                var ih = element[0].naturalHeight;
+                var cw = $(element).parent().outerWidth();
+                var ch = $(element).parent().outerHeight();
+
+                var pw = iw*ch/ih;
+
+                console.log([iw, ih], [cw, ch]);
+                if (iw > cw && ih > ch) element.addClass(pw > cw ? "cropWidth": "cropHeight");
+            });
+        }
+    }
+});
+
 app.service('Requests', function() {
     'use strict';
 
