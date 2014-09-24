@@ -160,7 +160,6 @@ function PdtCtrl($scope, $rootScope, $location, Requests) {
             $rootScope.cart_id = response.cart_id;
             $rootScope.cart_item_count = response.cart_item_count;
 
-            console.log(response);
             $rootScope.go_to_cart();
         });
     };

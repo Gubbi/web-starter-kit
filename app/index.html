@@ -14,7 +14,7 @@
     <!-- Add to homescreen for Safari on iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="Web Starter Kit">
+    <meta name="apple-mobile-web-app-title" content="${c.merchant.name.title()} Online Store">
     <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.png">
 
     <!-- Tile icon for Win8 (144x144 + tile color) -->
@@ -28,26 +28,29 @@
 
     <!-- Page styles -->
     <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/purejs.css">
+
+    <!-- Polymer Polyfill -->
+    <script src="components/platform/platform.js"></script>
+
+    <link rel="import" href="components/paper-fab/paper-fab.html">
+    <link rel="import" href="/scripts/kyash-icons.html">
 </head>
-<body ng-app="shop" ng-controller="HomeCtrl" style="overflow: hidden;">
+<body ng-app="shop" ng-controller="HomeCtrl" ng-class="{fb_store: is_fb_store}">
 <div id="fb-root"></div>
+<kyash-icons></kyash-icons>
 <header class="app-bar promote-layer ng-cloak" ng-cloak ng-class="{hidden: is_fb_store}">
     <div class="app-bar-container">
         <button class="menu"><img src="images/hamburger.svg" alt="Menu"></button>
         <h1 class="logo">
-            <a href="/" style="text-decoration: none !important;">
-                <div ng-if="merchant.logo">
-                    <img ng-src="{{ merchant.logo }}" title="{{ merchant.name }}" style="max-height: 65%;"/>
-                </div>
-                <div ng-if="!merchant.logo">
-                    {{ merchant.name }}
-                </div>
-            </a>
+            <div ng-if="merchant.logo">
+                <a href="/"><img ng-src="{{ merchant.logo }}" title="{{ merchant.name }}"/></a>
+            </div>
+            <div ng-if="!merchant.logo">
+                <a href="/">{{ merchant.name }}</a>
+            </div>
         </h1>
         <section class="app-bar-actions">
             <!-- Put App Bar Buttons Here -->
-
         </section>
     </div>
 </header>
@@ -59,10 +62,10 @@
         <li ng-repeat="cat in categories | filter:'!Featured'" ng-class="{active: activeCategory == cat}">
             <a href="#" ng-click="categoryList(cat)">{{cat}}</a>
         </li>
-        <li style="position:absolute; right:2%;">
-            <div class="notify_container">
-                <a href="#" title="Shopping Cart" ng-click="go_to_cart();"> <i style="vertical-align: middle;" class="icomoon-cart"></i></a>
-                <div class="notify_bubble" ng-class="{hidden: cart_item_count <= 0}">${c.cart_item_count}</div>
+        <li id="cart_menu_icon">
+            <div>
+                <a href="#" title="Shopping Cart" ng-click="go_to_cart();"> <i class="icon icon-cart"></i></a>
+                <div class="notify_bubble" ng-class="{hidden: cart_item_count <= 0}">{{cart_item_count}}</div>
             </div>
         </li>
     </ul>
@@ -71,61 +74,65 @@
 <main class="ng-cloak" ng-cloak>
     <div id="products_list" class="pure-g" ng-controller="CtgCtrl">
         <div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4 pure-u-xl-1-4" ng-repeat="product in productList">
-            <div class="product thumbnail" style="padding:2em 2em 1.5em; margin-bottom:0.5em;">
-                <a class="product_link" href="#" ng-click="showProduct(product)" style="text-decoration: none !important;">
-                    <div class="image_detail">
-                        <img class="pure-img" ng-src="{{ product.photo[0][2] }}"/>
+            <div class="product thumbnail" ng-click="showProduct(product)">
+                <div class="image_detail">
+                        <!--<img class="pure-img" ng-src="{{ product.photo[0][2] }}"/>-->
+                        <img src="https://unsplash.it/700/300/?random"/>
+                </div>
+                <div class="details">
+                    <div class="name small color--text">
+                        {{product.name}}
                     </div>
-                    <div class="details">
-                        <div class="name small color--text">
-                            {{product.name}}
-                        </div>
-                        <div style="text-align: right; padding-top:0.8em;">
-                            <span class="color--remember base" ng-if="!product.unit_price">
-                                <small></small>Enquire
-                            </span>
-                            <span class="color--highlight medium" ng-if="product.unit_price">
-                                <span class="color--danger" style="font-size:0.7em;" ng-if="product.mrp"><strike><small>&#8377;</small> {{product.mrp}}</strike></span>
-                                 <small>&#8377;</small> {{product.unit_price}}
-                            </span>
-                        </div>
+                    <div class="price">
+                        <paper-fab icon="k:cart"></paper-fab>
+                        <span class="color--remember base" ng-if="!product.unit_price">
+                            <small></small>Enquire
+                        </span>
+                        <span class="color--highlight medium" ng-if="product.unit_price">
+                            <span class="mrp" ng-if="product.mrp"><strike><small>&#8377;</small> {{product.mrp}}</strike></span>
+                             <small>&#8377;</small> {{product.unit_price}}
+                        </span>
                     </div>
-                </a>
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="product_board" class="pure-g" ng-controller="PdtCtrl" hidden style="padding:2em 0;">
-        <div class="pure-u-1 pure-u-sm-1-3 pure-u-md-1-3 pure-u-lg-2-5 pure-u-xl-2-5 centered">
-            <img class="pure-img" ng-src="{{ product.photo[0][1] }}" ng-if="product.photo[0]">
+    <div id="product_board" class="pure-g" ng-controller="PdtCtrl" hidden>
+        <div class="pure-u-1" id="product_title"><span class="large">{{product.name}}</span></div>
+
+        <div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-3">
+            <!--<img class="pure-img" ng-src="{{ product.photo[0][1] }}" ng-if="product.photo[0]">-->
+            <img class="pure-img" src="http://lorempixel.com/300/450/fashion/" ng-if="product.photo[0]">
             <br/>
-            <div class="small color--remember" style="text-align: left;">Browse Other Products In:</div>
-            <ul class="small color--learning" style="text-align: left; padding:0;">
+            <div class="small color--remember" >Browse Other Products In:</div>
+            <ul id="category_list" class="small color--learning">
                 <li ng-repeat="category in product.categories"> <a class="color--learning" href="#" ng-click="categoryList(category)">{{category}}</a></li>
             </ul>
         </div>
-        <div class="pure-u-1 pure-u-sm-2-3 pure-u-md-2-3 pure-u-lg-3-5 pure-u-xl-3-5" style="padding-left:2.5em">
-            <div class="large">{{product.name}}</div>
-            <p ng-if="product.units_available > 0" class="color--user" style="margin-top:0; padding-left:5px;">In Stock</p>
-            <p ng-if="product.units_available <= 0" class="color--danger" style="margin-top:0; padding-left:5px;">Out Of Stock</p>
-
-            <br/>
+        <div id="product_details" class="pure-u-1 pure-u-sm-2-3 pure-u-md-2-3">
             <div ng-if="is_purchasable">
-                <div class="pure-g">
-                    <div class="pure-u-1-2 pure-u-md-1-3 pure-u-lg-1-4" style="padding:12px 5px; margin: 13px 0;">
-                        <span class="color--highlight medium">
-                            <span class="color--danger" style="font-size:0.7em;" ng-if="product.mrp"><strike><small>&#8377;</small> {{product.mrp}}</strike></span>
-                            <span style="width:60px;"></span>
-                            <small>&#8377;</small> {{product.unit_price}}
-                        </span>
-                    </div>
-                    <div class="pure-u-1-2 pure-u-md-2-3 pure-u-lg-3-4">
-                        <button class="button--primary base" ng-click="addCart()"> <i class="icomoon-cart"> </i> Add to Cart</button>
-                        <div class="color--remember base" style="padding-top: 0;">
-                            <!--<small>Free shipping available if total purchase amount is more than <span style="white-space: nowrap;"> <small>&#8377;</small> 1000</span></small>-->
+                <span class="color--highlight large">
+                    <span class="mrp" ng-if="product.mrp"><strike>{{product.mrp}}</strike></span>
+                    <span class="selling_price"> <strong>{{product.unit_price}}</strong></span>
+                </span>
+                <button class="button--primary base" ng-click="addCart()"> <i class="icomoon-cart"> </i> Add to Cart</button>
+            </div>
+            <p ng-if="product.units_available > 0" class="color--user" style="margin-top:0; padding-top:10px; padding-left:5px;"><i style="vertical-align: baseline; font-size: 0.9em;" class="icon icon-tick"></i> In Stock</p>
+            <p ng-if="product.units_available <= 0" class="color--danger" style="margin-top:0; padding-top:10px; padding-left:5px;">Out Of Stock</p>
+            <div><span class="color--gray-keyline" style="width:75px;">Product Code</span> <span class="color--gray-medium">{{product.short_code}}</span></div>
+            <div class="articles-section">
+                <ol class="articles-list">
+                    <li class="articles-list__item color--muted" ng-if="product.description">
+                        <div>
+                            <pre>{{product.description}}</pre>
                         </div>
-                    </div>
-                </div>
+                    </li>
+                    <div class="divider divider--secondary divider--short"><span class="divider-icon divider-icon--secondary"></span></div>
+                </ol>
+            </div>
+            <div>
+                <a href="#" class="cta--primary">Cancellation Policies & Refunds</a>
             </div>
         </div>
     </div>
