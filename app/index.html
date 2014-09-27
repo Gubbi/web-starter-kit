@@ -1,3 +1,6 @@
+<%
+    import json
+%>
 <!doctype html>
 <html lang="">
 <head>
@@ -66,12 +69,12 @@
 
 <main class="ng-cloak" ng-cloak>
     <div id="products_list" class="pure-g" ng-controller="CtgCtrl">
-        <div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4 pure-u-xl-1-4" ng-repeat="product in productList">
-            <div class="product thumbnail" ng-click="showProduct(product)" onmouseover="$(this).find('.thumbnail_shadow').attr('z', '1');" onmouseout="$(this).find('.thumbnail_shadow').attr('z', '0');">
+        <div class="product pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4 pure-u-xl-1-4" ng-repeat="product in productList">
+            <div class="thumbnail" ng-click="showProduct(product)" onmouseover="$(this).find('.thumbnail_shadow').attr('z', '1');" onmouseout="$(this).find('.thumbnail_shadow').attr('z', '0');">
                 <div>
                     <paper-shadow class="thumbnail_shadow" z="0" animated="true"></paper-shadow>
                     <div class="image_detail">
-                        <!--<img class="pure-img" ng-src="{{ product.photo[0][2] }}"/>-->
+                        <!--<img ng-src="{{ product.photo[0][2] }}" scalable/>-->
                         <img src="https://unsplash.it/300/450/?random" scalable/>
                     </div>
                     <div class="details">
@@ -99,40 +102,116 @@
     </div>
 
     <div id="product_board" class="pure-g" ng-controller="PdtCtrl" hidden>
-        <div class="pure-u-1" id="product_title"><span class="large">{{product.name}}</span></div>
+        <div id="product_title" class="pure-u-1"><span>{{product.name}}</span></div>
 
-        <div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-3">
-            <!--<img class="pure-img" ng-src="{{ product.photo[0][1] }}" ng-if="product.photo[0]">-->
-            <img class="pure-img" src="http://lorempixel.com/300/450/fashion/" ng-if="product.photo[0]">
-            <br/>
-            <div class="small color--remember" >Browse Other Products In:</div>
-            <ul id="category_list" class="small color--learning">
-                <li ng-repeat="category in product.categories"> <a class="color--learning" href="#" ng-click="categoryList(category)">{{category}}</a></li>
-            </ul>
+        <div class="pure-u-1 pure-u-sm-1-2 pure-u-lg-5-12 pure-u-xl-1-3">
+            <div id="product_left_pane" class="pure-g">
+                <div id="product_image" class="pure-u-1">
+                    <!--<img ng-src="{{ product.photo[0][1] }}" ng-if="product.photo[0]">-->
+                    <img src="https://unsplash.it/1000/1500/?random" ng-if="product.photo[0]">
+                </div>
+
+                <div class="other_nav pure-u-1">
+                    <div>
+                        <div>Browse Other Products In:</div>
+                        <ul id="category_list">
+                            <li ng-repeat="category in product.categories" ng-click="categoryList(category)">{{category}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div id="product_details" class="pure-u-1 pure-u-sm-2-3 pure-u-md-2-3">
-            <div ng-if="is_purchasable">
-                <span class="color--highlight large">
-                    <span class="mrp" ng-if="product.mrp"><strike>{{product.mrp}}</strike></span>
-                    <span class="selling_price"> <strong>{{product.unit_price}}</strong></span>
-                </span>
-                <button class="button--primary base" ng-click="addCart()"> <i class="icomoon-cart"> </i> Add to Cart</button>
-            </div>
-            <p ng-if="product.units_available > 0" class="color--user" style="margin-top:0; padding-top:10px; padding-left:5px;"><i style="vertical-align: baseline; font-size: 0.9em;" class="icon icon-tick"></i> In Stock</p>
-            <p ng-if="product.units_available <= 0" class="color--danger" style="margin-top:0; padding-top:10px; padding-left:5px;">Out Of Stock</p>
-            <div><span class="color--gray-keyline" style="width:75px;">Product Code</span> <span class="color--gray-medium">{{product.short_code}}</span></div>
-            <div class="articles-section">
-                <ol class="articles-list">
-                    <li class="articles-list__item color--muted" ng-if="product.description">
-                        <div>
-                            <pre>{{product.description}}</pre>
+
+        <div class="pure-u-1 pure-u-sm-1-2 pure-u-lg-7-12 pure-u-xl-2-3">
+            <div id="product_right_pane" class="pure-g">
+                <div id="product_features" class="pure-u-1 pure-u-lg-2-5 pure-u-xl-1-2">
+                    <div>
+                        <div id="stock_status">
+                            <span ng-if="product.units_available > 0">In Stock</span>
+                            <span ng-if="product.units_available <= 0">Out Of Stock</span>
                         </div>
-                    </li>
-                    <div class="divider divider--secondary divider--short"><span class="divider-icon divider-icon--secondary"></span></div>
-                </ol>
+                        <div id="product_short_code" class="product_property">
+                            <div class="property_caption">PRODUCT CODE</div>
+                            #{{product.short_code}}
+                        </div>
+                    </div>
+                </div>
+
+                <div id="product_buy" class="pure-u-1 pure-u-lg-3-5 pure-u-xl-1-2">
+                    <div ng-if="is_purchasable">
+                        <div id="price">
+                            <div id="selling_price"><i class="icon icon-inr"></i><span>{{product.unit_price}}</span></div>
+                            <div id="list_price" ng-if="product.mrp && product.mrp != product.unit_price">
+                                <div class="property_caption">MRP</div>
+                                <strike style="white-space: nowrap;"><i class="icon icon-inr"></i> {{product.mrp}}</strike>
+                            </div>
+                        </div>
+                        <paper-button id="cart_submit" raisedButton label=" ADD TO CART " class="primary" ng-click="addCart()"></paper-button>
+                        <div id="policy_benefits" ng-if="is_freeshipping(product) || is_cod(product)">
+                            <div>
+                                <div ng-if="is_freeshipping(product)">
+                                    <i class="icon icon-checkmark2"></i> Free Delivery
+                                </div>
+                                <div ng-if="is_cod(product)">
+                                    <i class="icon icon-checkmark2"></i> Payment On Delivery
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="product_description" class="section pure-u-1">
+                    <div>
+                        <div ng-if="product.description">
+                            <div class="section_mast"><i class="icon icon-quill"></i></div>
+                            <div class="section_title">DESCRIPTION</div>
+                            <div class="section_content">
+                                <pre>{{product.description}}</pre>
+                            </div>
+                        </div>
+                        <div class="section_mast"><i class="icon icon-truck"></i></div>
+                        <div class="section_title">Returns & Refunds</div>
+                        <div class="section_content">
+                            <div class="content">
+                                <ul>
+                                    <li>
+                                        <div ng-if="policy.cancel_before_shipping">
+                                            Cancellation charges for returns before the product is shipped: <span class="text-secondary">{{policy.cbs_charges | charges}}</span>
+                                        </div>
+                                        <div ng-if="!policy.cancel_before_shipping">
+                                            Returns are not allowed after purchase.
+                                        </div>
+                                    </li>
+                                    <li ng-if="policy.cancel_before_shipping">
+                                        <div ng-if="policy.cancel_before_delivery">
+                                            Cancellation charges for returns after shipping: <span class="text-secondary">{{policy.cbd_charges | charges}}</span>
+                                        </div>
+                                        <div ng-if="!policy.cancel_before_delivery">
+                                            Returns are not allowed after the product has been shipped by us.
+                                        </div>
+                                    </li>
+                                    <li ng-if="policy.cancel_before_shipping && policy.cancel_before_delivery">
+                                        <div ng-if="policy.cancel_after_delivery">
+                                            Cancellation charges for returns after delivery: <span class="text-secondary">{{policy.cad_charges | charges}}</span>
+                                        </div>
+                                        <div ng-if="!policy.cancel_after_delivery">
+                                            Returns are not allowed after the product has been delivered to you.
+                                        </div>
+                                    </li>
+                                    <li>For non-COD orders, full refunds are given if order is not delivered within 15 days or when defective/wrong products are delivered. Customer will have up to 3 days after delivery to claim refunds for defective/wrong shipments for non-COD orders.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
+        <div class="other_nav pure-u-1">
             <div>
-                <a href="#" class="cta--primary">Cancellation Policies & Refunds</a>
+                <div>Browse Other Products In:</div>
+                <ul id="category_list">
+                    <li ng-repeat="category in product.categories" ng-click="categoryList(category)">{{category}}</li>
+                </ul>
             </div>
         </div>
     </div>
@@ -142,7 +221,7 @@
     <div class="main-footer__container clear">
         <div class="footer-title"><span class="lead_part">About</span> <span class="brand">${c.merchant.name.title()}</span></div>
         <div class="pure-g main-footer__list-group">
-            <div class="pure-u-1 pure-u-sm-1-3 pure-u-md-1-4" style="text-align: right">
+            <div class="nav-content pure-u-1 pure-u-sm-1-3 pure-u-md-1-4" style="text-align: right">
                 <ul class="main-footer__list">
                     <li><a href="/privacy_policy">Privacy Policy</a></li>
                     <li><a href="/terms_of_use">Terms of Use</a></li>
@@ -152,10 +231,10 @@
                     <li><a href="/disclaimer">Disclaimer</a></li>
                 </ul>
             </div>
-            <div class="pure-u-1 pure-u-sm-1-3 pure-u-md-1-2">
+            <div class="main-content pure-u-1 pure-u-sm-1-3 pure-u-md-1-2">
                 <div id="footer_about"><p class="small">${c.merchant.description}</p></div>
             </div>
-            <div class="pure-u-1 pure-u-sm-1-3 pure-u-md-1-4">
+            <div class="contact-content pure-u-1 pure-u-sm-1-3 pure-u-md-1-4">
                 <div class="main-footer__contacts">
                     <div>${c.merchant.name.title()}</div>
                     <div>${c.org.registered_address.street}</div>
@@ -170,6 +249,7 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-animate.js"></script>
 
 <!-- build:js scripts/main.min.js -->
 <script src="scripts/main.js"></script>
@@ -186,7 +266,8 @@
             },
             is_fb_store: ${'true' if c.is_fb_store else 'false'},
             cart_item_count: ${c.cart_item_count},
-            cart_id: '${c.cart_order.key.id() if c.cart_order else ""}'
+            cart_id: '${c.cart_order.key.id() if c.cart_order else ""}',
+            policy: ${json.dumps(h.to_json(c.sales_policy.to_dict()))}
         };
         return {
             $get: function () {
@@ -198,6 +279,7 @@
         $rootScope.is_fb_store = KyashConstants.is_fb_store;
         $rootScope.cart_item_count = KyashConstants.cart_item_count;
         $rootScope.cart_id = KyashConstants.cart_id;
+        $rootScope.policy = KyashConstants.policy;
 
         if($rootScope.is_fb_store) {
             window.fbAsyncInit = function() {
@@ -239,7 +321,16 @@
             else {
                 window.location = url;
             }
-        }
+        };
+
+        $rootScope.is_freeshipping = function(product) {
+            return $rootScope.policy.free_shipping_min_order <= product.unit_price
+        };
+
+        $rootScope.is_cod = function(product) {
+            var policy = $rootScope.policy;
+            return policy.has_cod && policy.min_amount_cod <= product.unit_price && policy.max_amount_cod >= product.unit_price
+        };
     });
 </script>
 

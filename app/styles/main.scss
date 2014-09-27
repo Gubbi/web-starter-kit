@@ -348,14 +348,6 @@ header .logo a {
   }
 }
 
-#product_board {
-  padding:2em 0;
-
-  #product_title {
-    padding: 1.5em 0 2em
-  }
-}
-
 .text-left {
   text-align: left;
 }
@@ -364,29 +356,6 @@ header .logo a {
   text-align: right;
 }
 
-#category_list {
-  padding:0;
-
-  li {
-    list-style: none;
-    padding-left: 0;
-    a {
-      @extend .text-link;
-    }
-    &::before {
-      content: "";
-    }
-  }
-}
-
 button {
   white-space: nowrap;
-}
-
-#product_details {
-  padding-left: 2.5em;
-
-  button {
-    margin-top:0;
-  }
 }

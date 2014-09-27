@@ -49,7 +49,7 @@
   });
 })();
 
-var app = angular.module('shop', ['ngRoute']);
+var app = angular.module('shop', ['ngRoute', 'ngAnimate']);
 
 app.directive('scalable', function() {
     return {
@@ -67,6 +67,12 @@ app.directive('scalable', function() {
             });
         }
     }
+});
+
+app.filter("charges", function() {
+  return function(input) {
+    return input.kind=='percentage'? input.price.toString() + '%' : '<i class="icon icon-inr"></i>' + input.price.toString();
+  };
 });
 
 app.service('Requests', function() {
@@ -107,40 +113,52 @@ app.service('Requests', function() {
 
 function HomeCtrl($scope, $rootScope, $location, Requests) {
     'use strict';
-
     $scope.categories = [];
-    $scope.activeCategory = 'Featured';
+    $scope.activeCategory = null;
 
     Requests.getRequest('/general_details', {merchant: $rootScope.merchant.id}, function(response) {
         $scope.merchant = response;
         $.each(response.categories, function(key, value) {
             $scope.categories.push(key);
         });
-        $rootScope.$broadcast('categorySet', {category: 'Featured'});
     });
 
     $scope.categoryList = function (cat) {
-        $scope.activeCategory = cat;
         $rootScope.$broadcast('categorySet', {category: cat});
     };
+
+    $scope.set_active_category = function (cat) {
+        $scope.activeCategory = cat;
+        console.log($scope.activeCategory, cat);
+    }
 }
 
 function CtgCtrl($scope, $rootScope, $location, $routeParams, Requests) {
     'use strict';
 
     $scope.refreshProductList = function(category) {
-        Requests.getRequest('/category/'+category, {merchant: $rootScope.merchant.id}, function(data) {
-            $scope.productList = data.products;
-
+        if($scope.activeCategory != null && $scope.activeCategory == category) {
             if(!$('#products_list').is(":visible")) {
-                $('#product_board').fadeOut('slow', function() {
-                    $('#products_list').fadeIn();
-                });
+                $('#product_board').fadeOut('slow', function() { $('#products_list').fadeIn(); });
             }
-        });
+            document.body.scrollTop = document.documentElement.scrollTop = 0;
+        }
+        else {
+            Requests.getRequest('/category/' + category, {merchant: $rootScope.merchant.id}, function (data) {
+                $scope.productList = data.products;
+                $scope.set_active_category(category);
+
+                if (!$('#products_list').is(":visible")) {
+                    $('#products_list').fadeIn('slow', function () { $('#product_board').fadeOut(); });
+                }
+                document.body.scrollTop = document.documentElement.scrollTop = 0;
+            });
+        }
     };
 
-    $scope.refreshProductList($scope.activeCategory);
+    if($scope.activeCategory == null) {
+        $scope.refreshProductList('Featured');
+    }
 
     $scope.$on('categorySet', function(event, args) {
         $scope.refreshProductList(args.category);
@@ -169,6 +187,7 @@ function PdtCtrl($scope, $rootScope, $location, Requests) {
         $('#products_list').fadeOut('slow', function() {
             $('#product_board').fadeIn().removeAttr('hidden');
         });
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
     });
 
     $scope.addCart = function() {

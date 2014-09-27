@@ -13,7 +13,7 @@
   font-family: 'icons';
   display: inline-block;
   vertical-align: top;
-  line-height: 1;
+  line-height: inherit;
   font-weight: normal;
   font-style: normal;
   font-variant: normal;
@@ -150,7 +150,6 @@ $icon-tick: '\e017';
 .icon-inr:before {
   content: "\e608";
   font-size: 0.7em;
-  line-height: 2.8em;
 }
 
 .icon-streetsign:before {
