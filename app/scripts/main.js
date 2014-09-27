@@ -49,16 +49,6 @@
   });
 })();
 
-
-function show_loading() {
-    $('#load-msg').show();
-}
-
-function hide_loading() {
-    $('#load-msg').hide();
-}
-
-
 var app = angular.module('shop', ['ngRoute', 'ngAnimate']);
 
 app.directive('scalable', function() {
@@ -133,8 +123,9 @@ function HomeCtrl($scope, $rootScope, $location, Requests) {
     });
 
     $scope.categoryList = function (cat) {
-        show_loading();
-        $rootScope.$broadcast('categorySet', {category: cat});
+        $('#load-msg').show(function() {
+            $rootScope.$broadcast('categorySet', {category: cat});
+        });
     };
 
     $scope.set_active_category = function (cat) {
@@ -151,7 +142,7 @@ function CtgCtrl($scope, $rootScope, $location, $routeParams, Requests) {
                 $('#product_board').fadeOut('slow', function() { $('#products_list').fadeIn(); });
             }
             document.body.scrollTop = document.documentElement.scrollTop = 0;
-            hide_loading();
+            $('#load-msg').hide();
         }
         else {
             Requests.getRequest('/category/' + category, {merchant: $rootScope.merchant.id}, function (data) {
@@ -162,7 +153,7 @@ function CtgCtrl($scope, $rootScope, $location, $routeParams, Requests) {
                     $('#products_list').fadeIn('slow', function () { $('#product_board').fadeOut(); });
                 }
                 document.body.scrollTop = document.documentElement.scrollTop = 0;
-                hide_loading();
+                $('#load-msg').hide();
             });
         }
     };
@@ -196,20 +187,21 @@ function PdtCtrl($scope, $rootScope, $location, Requests) {
         $scope.is_purchasable = args.product.units_available > 0 && args.product.unit_price > 0;
 
         $('#products_list').fadeOut('slow', function() {
+            document.body.scrollTop = document.documentElement.scrollTop = 0;
             $('#product_board').fadeIn().removeAttr('hidden');
         });
-        document.body.scrollTop = document.documentElement.scrollTop = 0;
     });
 
     $scope.addCart = function() {
-        show_loading();
-        var data = {product_id: $scope.product.id, merchant: $rootScope.merchant.id};
-        Requests.postRequest('/cart/', data, function(response) {
-            $scope.cart = response;
-            $rootScope.cart_id = response.cart_id;
-            $rootScope.cart_item_count = response.cart_item_count;
+        $('#load-msg').show(function() {
+            var data = {product_id: $scope.product.id, merchant: $rootScope.merchant.id};
+            Requests.postRequest('/cart/', data, function(response) {
+                $scope.cart = response;
+                $rootScope.cart_id = response.cart_id;
+                $rootScope.cart_item_count = response.cart_item_count;
 
-            $rootScope.go_to_cart();
+                $rootScope.go_to_cart();
+            });
         });
     };
 }

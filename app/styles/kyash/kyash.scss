@@ -36,7 +36,9 @@ paper-fab {
 .thumbnail {
   padding: 2.5em 1.5em 1.5em;
   margin-bottom: 0.5em;
-  cursor: pointer;
+  >div {
+    cursor: pointer;
+  }
 
   .image_detail {
     height: 0;
@@ -287,7 +289,7 @@ paper-fab {
         vertical-align: bottom;
       }
       #selling_price {
-        @extend .text-display35;
+        @extend .text-display3;
         color: $accent;
         font-weight: 100;
         margin-top: -14pt;
@@ -297,14 +299,14 @@ paper-fab {
           vertical-align: bottom;
           line-height: 1em;
           display: inline-block;
-          margin-bottom: 28px;
+          margin-bottom: 18px;
           color: rgba($accent, .87);
         }
       }
       #list_price {
         position: absolute;
         padding-left: 24px;
-        bottom: 18pt;
+        bottom: 9pt;
         color: $black54;
       }
     }
@@ -421,25 +423,6 @@ paper-fab {
     #price {
       #selling_price {
         margin-left: 0;
-      }
-    }
-  }
-}
-
-@media all and (max-width: 1200px) {
-  #product_board #product_buy {
-    #price {
-      #selling_price {
-        font-size: 56px;
-        line-height: 60pt;
-        color: $accent;
-        font-weight: 100;
-        i {
-          margin-bottom: 18px;
-        }
-      }
-      #list_price {
-        bottom: 9px;
       }
     }
   }

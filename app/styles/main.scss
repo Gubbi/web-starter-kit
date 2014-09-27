@@ -80,6 +80,7 @@ body.open {
   max-width: none;
   font-weight: 300;
   display: initial;
+  height: 75px;
 }
 
 .app-bar .logo a {
@@ -336,16 +337,15 @@ main {
   text-decoration: none;
 }
 
-
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak, .hidden {
     display: none !important;
 }
 
-header .logo a {
-  @extend .text-link;
+header .logo {
   img {
     max-height: 65%;
   }
+  cursor: pointer;
 }
 
 .text-left {
