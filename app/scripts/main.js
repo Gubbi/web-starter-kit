@@ -125,9 +125,8 @@ function HomeCtrl($scope, $rootScope, $location, Requests) {
     });
 
     $scope.categoryList = function (cat) {
-        $('#load-msg').show(function() {
-            $rootScope.$broadcast('categorySet', {category: cat});
-        });
+        $('#load-msg').css('display', 'block');
+        $rootScope.$broadcast('categorySet', {category: cat});
     };
 
     $scope.set_active_category = function (cat) {
@@ -154,7 +153,7 @@ function CtgCtrl($scope, $rootScope, $location, $routeParams, Requests) {
                 $('#product_board').fadeOut('slow', function() { $('#products_list').fadeIn(); });
             }
             document.body.scrollTop = document.documentElement.scrollTop = 0;
-            $('#load-msg').hide();
+            $('#load-msg').css('display', 'none');
         }
         else {
             Requests.getRequest('/category/' + category, {merchant: $rootScope.merchant.id}, function (data) {
@@ -167,7 +166,7 @@ function CtgCtrl($scope, $rootScope, $location, $routeParams, Requests) {
                     $('#product_board').fadeOut('slow', function() { $('#products_list').fadeIn(); });
                 }
                 document.body.scrollTop = document.documentElement.scrollTop = 0;
-                $('#load-msg').hide();
+                $('#load-msg').css('display', 'none');
             });
         }
     };
@@ -207,15 +206,15 @@ function PdtCtrl($scope, $rootScope, $location, Requests) {
     });
 
     $scope.addCart = function() {
-        $('#load-msg').show(function() {
-            var data = {product_id: $scope.product.id, merchant: $rootScope.merchant.id};
-            Requests.postRequest('/cart/', data, function(response) {
-                $scope.cart = response;
-                $rootScope.cart_id = response.cart_id;
-                $rootScope.cart_item_count = response.cart_item_count;
+        $('#load-msg').css('display', 'block');
 
-                $rootScope.go_to_cart();
-            });
+        var data = {product_id: $scope.product.id, merchant: $rootScope.merchant.id};
+        Requests.postRequest('/cart/', data, function(response) {
+            $scope.cart = response;
+            $rootScope.cart_id = response.cart_id;
+            $rootScope.cart_item_count = response.cart_item_count;
+
+            $rootScope.go_to_cart();
         });
     };
 }
