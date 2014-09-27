@@ -61,6 +61,7 @@ app.directive('scalable', function() {
                 var ch = $(element).parent().outerHeight();
 
                 var pw = iw*ch/ih;
+                console.log([iw, ih, cw, ch, pw]);
 
                 if (iw > cw && ih > ch) element.addClass(pw > cw ? "cropWidth": "cropHeight");
             });
@@ -132,6 +133,14 @@ function HomeCtrl($scope, $rootScope, $location, Requests) {
     $scope.set_active_category = function (cat) {
         console.log('Setting active Category to: ', cat);
         that.activeCategory = cat;
+    };
+
+    $scope.get_active_category = function () {
+        return that.activeCategory;
+    };
+
+    $scope.is_active_category = function (cat) {
+        return that.activeCategory != null && that.activeCategory == category
     }
 }
 
@@ -139,8 +148,8 @@ function CtgCtrl($scope, $rootScope, $location, $routeParams, Requests) {
     'use strict';
 
     $scope.refreshProductList = function(category) {
-        console.log('Active Category', $scope.activeCategory);
-        if($scope.activeCategory != null && $scope.activeCategory == category) {
+        console.log('Active Category', $scope.get_active_category());
+        if($scope.is_active_category(category)) {
             if(!$('#products_list').is(":visible")) {
                 $('#product_board').fadeOut('slow', function() { $('#products_list').fadeIn(); });
             }
