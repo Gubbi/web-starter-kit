@@ -96,22 +96,6 @@ paper-fab {
   }
 }
 
-.product.ng-enter,
-.product.ng-leave {
-  -webkit-transition: 0.5s linear all;
-  transition: 0.5s linear all;
-}
-
-.product.ng-enter,
-.product.ng-leave.ng-leave-active {
-  opacity:0;
-}
-
-.product.ng-leave,
-.product.ng-enter.ng-enter-active {
-  opacity:1;
-}
-
 .main-footer {
   background: $gray800;
   padding: 56px 0;

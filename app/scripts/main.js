@@ -49,7 +49,7 @@
   });
 })();
 
-var app = angular.module('shop', ['ngRoute', 'ngAnimate']);
+var app = angular.module('shop', ['ngRoute']);
 
 app.directive('scalable', function() {
     return {
