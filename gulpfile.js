@@ -41,13 +41,13 @@ var AUTOPREFIXER_BROWSERS = [
 ];
 
 // Lint JavaScript
-//gulp.task('jshint', function () {
-//  return gulp.src('app/scripts/**/*.js')
-//    .pipe(reload({stream: true, once: true}))
-//    .pipe($.jshint())
-//    .pipe($.jshint.reporter('jshint-stylish'))
-//    .pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
-//});
+gulp.task('jshint', function () {
+  return gulp.src('app/scripts/**/*.js')
+    .pipe(reload({stream: true, once: true}))
+    .pipe($.jshint())
+    .pipe($.jshint.reporter('jshint-stylish'))
+    .pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
+});
 
 // Optimize Images
 gulp.task('images', function () {
@@ -77,6 +77,13 @@ gulp.task('fonts', function () {
   return gulp.src(['app/fonts/**'])
     .pipe(gulp.dest('dist/fonts'))
     .pipe($.size({title: 'fonts'}));
+});
+
+// Copy Bower Component Files To Dist
+gulp.task('components', function () {
+  return gulp.src(['app/bower_components/**'])
+    .pipe(gulp.dest('dist/bower_components'))
+    .pipe($.size({title: 'bower_components'}));
 });
 
 // Compile and Automatically Prefix Stylesheets
@@ -114,8 +121,7 @@ gulp.task('html', function () {
     // the next line to only include styles your project uses.
     .pipe($.if('*.css', $.uncss({
       html: [
-        'app/index.html',
-        'app/styleguide.html'
+        'app/index.html'
       ],
       // CSS Selectors for UnCSS to ignore
       ignore: [
@@ -131,7 +137,7 @@ gulp.task('html', function () {
     // Update Production Style Guide Paths
     .pipe($.replace('components/components.css', 'components/main.min.css'))
     // Minify Any HTML
-    .pipe($.if('*.html', $.minifyHtml()))
+//    .pipe($.if('*.html', $.minifyHtml()))
     // Output Files
     .pipe(gulp.dest('dist'))
     .pipe($.size({title: 'html'}));
@@ -154,7 +160,7 @@ gulp.task('serve', ['styles'], function () {
 
   gulp.watch(['app/**/*.html'], reload);
   gulp.watch(['app/styles/**/*.{scss,css}'], ['styles', reload]);
-//  gulp.watch(['app/scripts/**/*.js'], ['jshint']);
+  gulp.watch(['app/scripts/**/*.js'], ['jshint']);
   gulp.watch(['app/images/**/*'], reload);
 });
 
@@ -172,8 +178,8 @@ gulp.task('serve:dist', ['default'], function () {
 
 // Build Production Files, the Default Task
 gulp.task('default', ['clean'], function (cb) {
-//  runSequence('styles', ['jshint', 'html', 'images', 'fonts', 'copy'], cb);
-  runSequence('styles', ['html', 'images', 'fonts', 'copy'], cb);
+  runSequence('styles', ['jshint', 'html', 'images', 'fonts', 'components', 'copy'], cb);
+//  runSequence('styles', ['html', 'images', 'fonts', 'copy'], cb);
 });
 
 // Run PageSpeed Insights

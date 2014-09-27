@@ -49,6 +49,16 @@
   });
 })();
 
+
+function show_loading() {
+    $('#load-msg').show();
+}
+
+function hide_loading() {
+    $('#load-msg').hide();
+}
+
+
 var app = angular.module('shop', ['ngRoute', 'ngAnimate']);
 
 app.directive('scalable', function() {
@@ -62,7 +72,6 @@ app.directive('scalable', function() {
 
                 var pw = iw*ch/ih;
 
-                console.log([iw, ih], [cw, ch]);
                 if (iw > cw && ih > ch) element.addClass(pw > cw ? "cropWidth": "cropHeight");
             });
         }
@@ -124,12 +133,12 @@ function HomeCtrl($scope, $rootScope, $location, Requests) {
     });
 
     $scope.categoryList = function (cat) {
+        show_loading();
         $rootScope.$broadcast('categorySet', {category: cat});
     };
 
     $scope.set_active_category = function (cat) {
         $scope.activeCategory = cat;
-        console.log($scope.activeCategory, cat);
     }
 }
 
@@ -142,6 +151,7 @@ function CtgCtrl($scope, $rootScope, $location, $routeParams, Requests) {
                 $('#product_board').fadeOut('slow', function() { $('#products_list').fadeIn(); });
             }
             document.body.scrollTop = document.documentElement.scrollTop = 0;
+            hide_loading();
         }
         else {
             Requests.getRequest('/category/' + category, {merchant: $rootScope.merchant.id}, function (data) {
@@ -152,6 +162,7 @@ function CtgCtrl($scope, $rootScope, $location, $routeParams, Requests) {
                     $('#products_list').fadeIn('slow', function () { $('#product_board').fadeOut(); });
                 }
                 document.body.scrollTop = document.documentElement.scrollTop = 0;
+                hide_loading();
             });
         }
     };
@@ -191,6 +202,7 @@ function PdtCtrl($scope, $rootScope, $location, Requests) {
     });
 
     $scope.addCart = function() {
+        show_loading();
         var data = {product_id: $scope.product.id, merchant: $rootScope.merchant.id};
         Requests.postRequest('/cart/', data, function(response) {
             $scope.cart = response;

@@ -1,6 +1,3 @@
-<%
-    import json
-%>
 <!doctype html>
 <html lang="">
 <head>
@@ -74,8 +71,8 @@
                 <div>
                     <paper-shadow class="thumbnail_shadow" z="0" animated="true"></paper-shadow>
                     <div class="image_detail">
-                        <!--<img ng-src="{{ product.photo[0][2] }}" scalable/>-->
-                        <img src="https://unsplash.it/300/450/?random" scalable/>
+                        <img ng-src="{{ product.photo[0][2] }}" scalable/>
+                        <!--<img src="https://unsplash.it/300/450/?random" scalable/>-->
                     </div>
                     <div class="details">
                         <div class="name">{{product.name}}</div>
@@ -107,8 +104,8 @@
         <div class="pure-u-1 pure-u-sm-1-2 pure-u-lg-5-12 pure-u-xl-1-3">
             <div id="product_left_pane" class="pure-g">
                 <div id="product_image" class="pure-u-1">
-                    <!--<img ng-src="{{ product.photo[0][1] }}" ng-if="product.photo[0]">-->
-                    <img src="https://unsplash.it/1000/1500/?random" ng-if="product.photo[0]">
+                    <img ng-src="{{ product.photo[0][1] }}" ng-if="product.photo[0]">
+                    <!--<img src="https://unsplash.it/1000/1500/?random" ng-if="product.photo[0]">-->
                 </div>
 
                 <div class="other_nav pure-u-1">
@@ -246,6 +243,10 @@
     </div>
 </footer>
 
+<div id="load-msg">
+    <i class="icon icon-spin icon-spinner"></i> &nbsp; &nbsp; Loading...
+</div>
+
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
@@ -267,7 +268,7 @@
             is_fb_store: ${'true' if c.is_fb_store else 'false'},
             cart_item_count: ${c.cart_item_count},
             cart_id: '${c.cart_order.key.id() if c.cart_order else ""}',
-            policy: ${json.dumps(h.to_json(c.sales_policy.to_dict()))}
+            policy: ${c.sales_policy_str}
         };
         return {
             $get: function () {

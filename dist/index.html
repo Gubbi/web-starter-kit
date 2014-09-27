@@ -1,4 +1,260 @@
-<!doctype html><html><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=description content="A front-end template that helps you build fast, modern mobile web apps."><meta name=viewport content="width=device-width, initial-scale=1"><title>${c.merchant.name}</title><meta name=mobile-web-app-capable content=yes><link rel=icon sizes=192x192 href=images/touch/chrome-touch-icon-192x192.png><meta name=apple-mobile-web-app-capable content=yes><meta name=apple-mobile-web-app-status-bar-style content=black><meta name=apple-mobile-web-app-title content="Web Starter Kit"><link rel=apple-touch-icon-precomposed href=apple-touch-icon-precomposed.png><meta name=msapplication-TileImage content=images/touch/ms-touch-icon-144x144-precomposed.png><meta name=msapplication-TileColor content=#3372DF><link rel=stylesheet href=styles/main.css><link rel=stylesheet href=styles/purejs.css></head><body ng-app=shop ng-controller=HomeCtrl style="overflow: hidden;"><div id=fb-root></div><header class="app-bar promote-layer ng-cloak" ng-class="{hidden: is_fb_store}"><div class=app-bar-container><button class=menu><img src=images/hamburger.svg alt=Menu></button><h1 class=logo><a href="/" style="text-decoration: none !important;"><div ng-if=merchant.logo><img ng-src="{{ merchant.logo }}" title="{{ merchant.name }}" style="max-height: 65%;"></div><div ng-if=!merchant.logo>{{ merchant.name }}</div></a></h1><section class=app-bar-actions></section></div></header><nav class="navdrawer-container promote-layer ng-cloak"><h4>Navigation</h4><ul><li ng-class="{active: activeCategory == 'Featured'}"><a href=# ng-click="categoryList('Featured')">Featured</a></li><li ng-repeat="cat in categories | filter:'!Featured'" ng-class="{active: activeCategory == cat}"><a href=# ng-click=categoryList(cat)>{{cat}}</a></li><li style="position:absolute; right:2%;"><div class=notify_container><a href=# title="Shopping Cart" ng-click=go_to_cart();><i style="vertical-align: middle;" class=icomoon-cart></i></a><div class=notify_bubble ng-class="{hidden: cart_item_count <= 0}">${c.cart_item_count}</div></div></li></ul></nav><main class=ng-cloak><div id=products_list class=pure-g ng-controller=CtgCtrl><div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4 pure-u-xl-1-4" ng-repeat="product in productList"><div class="product thumbnail" style="padding:2em 2em 1.5em; margin-bottom:0.5em;"><a class=product_link href=# ng-click=showProduct(product) style="text-decoration: none !important;"><div class=image_detail><img class=pure-img ng-src="{{ product.photo[0][2] }}"></div><div class=details><div class="name small color--text">{{product.name}}</div><div style="text-align: right; padding-top:0.8em;"><span class="color--remember base" ng-if=!product.unit_price><small></small>Enquire</span> <span class="color--highlight medium" ng-if=product.unit_price><span class=color--danger style=font-size:0.7em; ng-if=product.mrp><strike><small>&#8377;</small> {{product.mrp}}</strike></span> <small>&#8377;</small> {{product.unit_price}}</span></div></div></a></div></div></div><div id=product_board class=pure-g ng-controller=PdtCtrl hidden style="padding:2em 0;"><div class="pure-u-1 pure-u-sm-1-3 pure-u-md-1-3 pure-u-lg-2-5 pure-u-xl-2-5 centered"><img class=pure-img ng-src="{{ product.photo[0][1] }}" ng-if=product.photo[0]><br><div class="small color--remember" style="text-align: left;">Browse Other Products In:</div><ul class="small color--learning" style="text-align: left; padding:0;"><li ng-repeat="category in product.categories"><a class=color--learning href=# ng-click=categoryList(category)>{{category}}</a></li></ul></div><div class="pure-u-1 pure-u-sm-2-3 pure-u-md-2-3 pure-u-lg-3-5 pure-u-xl-3-5" style=padding-left:2.5em><div class=large>{{product.name}}</div><p ng-if="product.units_available > 0" class=color--user style="margin-top:0; padding-left:5px;">In Stock</p><p ng-if="product.units_available <= 0" class=color--danger style="margin-top:0; padding-left:5px;">Out Of Stock</p><br><div ng-if=is_purchasable><div class=pure-g><div class="pure-u-1-2 pure-u-md-1-3 pure-u-lg-1-4" style="padding:12px 5px; margin: 13px 0;"><span class="color--highlight medium"><span class=color--danger style=font-size:0.7em; ng-if=product.mrp><strike><small>&#8377;</small> {{product.mrp}}</strike></span> <span style=width:60px;></span> <small>&#8377;</small> {{product.unit_price}}</span></div><div class="pure-u-1-2 pure-u-md-2-3 pure-u-lg-3-4"><button class="button--primary base" ng-click=addCart()><i class=icomoon-cart></i> Add to Cart</button><div class="color--remember base" style="padding-top: 0;"></div></div></div></div></div></div></main><footer class=main-footer><div class="main-footer__container clear"><div class="large centered color--muted" style="padding-top: 0;">About <strong>${c.merchant.name.title()}</strong></div><div class="pure-g main-footer__list-group"><div class="pure-u-1 pure-u-sm-1-3 pure-u-md-1-4" style="text-align: right"><ul class=main-footer__list><li><a href=/privacy_policy>Privacy Policy</a></li><li><a href=/terms_of_use>Terms of Use</a></li><li><a href=/delivery>Delivery</a></li><li><a href=/cancellations_and_returns>Cancellations and Returns</a></li><li><a href=/refunds>Refunds</a></li><li><a href=/disclaimer>Disclaimer</a></li></ul></div><div id=footer_about class="pure-u-1 pure-u-sm-1-3 pure-u-md-1-2"><div style="text-align: justify; padding:0 2em;"><p class=small style="color: #ccc;">${c.merchant.description}</p></div></div><div class="pure-u-1 pure-u-sm-1-3 pure-u-md-1-4 main-footer__contacts"><div><strong>${c.merchant.name.title()}</strong></div><div>${c.org.registered_address.street}</div><div>${c.org.registered_address.city} - ${c.org.registered_address.pincode}</div><div>+91 ${c.org.registered_address.phone}</div></div></div></div></footer><script src=//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js></script><script src=//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js></script><script src=//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js></script><script src=scripts/main.min.js></script><script>
+<!doctype html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>${c.merchant.name}</title>
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" sizes="192x192" href="images/touch/chrome-touch-icon-192x192.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="${c.merchant.name.title()} Online Store">
+    <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#3372DF">
+
+    <!-- Page styles -->
+    <link rel="stylesheet" href="styles/main.css">
+
+    <!-- Polymer Polyfill -->
+    <script src="components/platform/platform.js"></script>
+
+    <link rel="import" href="components/paper-fab/paper-fab.html">
+    <link rel="import" href="/scripts/kyash-icons.html">
+</head>
+
+<body ng-app="shop" ng-controller="HomeCtrl" ng-class="{fb_store: is_fb_store}">
+
+<div id="fb-root"></div>
+<kyash-icons></kyash-icons>
+
+<header class="app-bar promote-layer ng-cloak" ng-cloak ng-class="{hidden: is_fb_store}">
+    <div class="app-bar-container">
+        <button class="menu"><img src="images/hamburger.svg" alt="Menu"></button>
+        <h1 class="logo">
+            <a href="/">
+                <img ng-src="{{ merchant.logo }}" title="{{ merchant.name }}" ng-if="merchant.logo" ng-click="window.location.url='/'"/>
+                <span ng-if="!merchant.logo">{{ merchant.name }}</span>
+            </a>
+        </h1>
+    </div>
+</header>
+
+<nav class="navdrawer-container promote-layer ng-cloak" ng-cloak>
+    <h4>Navigation</h4>
+    <ul>
+        <li ng-class="{active: activeCategory == 'Featured'}"><a href="#" ng-click="categoryList('Featured')">FEATURED</a></li>
+        <li ng-repeat="cat in categories | filter:'!Featured'" ng-class="{active: activeCategory == cat}">
+            <a href="#" ng-click="categoryList(cat)">{{cat | uppercase}}</a>
+        </li>
+        <li id="cart_menu_icon">
+            <div>
+                <a href="#" title="Shopping Cart" ng-click="go_to_cart();"> <i class="icon icon-cart"></i></a>
+                <div class="notify_bubble" ng-class="{hidden: cart_item_count <= 0}">{{cart_item_count}}</div>
+            </div>
+        </li>
+    </ul>
+</nav>
+
+<main class="ng-cloak" ng-cloak>
+    <div id="products_list" class="pure-g" ng-controller="CtgCtrl">
+        <div class="product pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4 pure-u-xl-1-4" ng-repeat="product in productList">
+            <div class="thumbnail" ng-click="showProduct(product)" onmouseover="$(this).find('.thumbnail_shadow').attr('z', '1');" onmouseout="$(this).find('.thumbnail_shadow').attr('z', '0');">
+                <div>
+                    <paper-shadow class="thumbnail_shadow" z="0" animated="true"></paper-shadow>
+                    <div class="image_detail">
+                        <img ng-src="{{ product.photo[0][2] }}" scalable/>
+                        <!--<img src="https://unsplash.it/300/450/?random" scalable/>-->
+                    </div>
+                    <div class="details">
+                        <div class="name">{{product.name}}</div>
+                        <div class="more pure-g">
+                            <div class="price pure-u-1-2">
+                                <div>
+                                    <div class='mrp'>
+                                        <div ng-if="product.mrp && product.mrp != product.unit_price"><strike>&#8377; {{product.mrp}}</strike></div>
+                                    </div>
+                                    <div ng-if="product.unit_price">
+                                        <i class="icon icon-inr"></i> {{product.unit_price}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="action pure-u-1-2">
+                                <paper-button label="BUY" ng-if="product.unit_price"></paper-button>
+                                <paper-button label="ENQUIRE" ng-if="!product.unit_price"></paper-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="product_board" class="pure-g" ng-controller="PdtCtrl" hidden>
+        <div id="product_title" class="pure-u-1"><span>{{product.name}}</span></div>
+
+        <div class="pure-u-1 pure-u-sm-1-2 pure-u-lg-5-12 pure-u-xl-1-3">
+            <div id="product_left_pane" class="pure-g">
+                <div id="product_image" class="pure-u-1">
+                    <img ng-src="{{ product.photo[0][1] }}" ng-if="product.photo[0]">
+                    <!--<img src="https://unsplash.it/1000/1500/?random" ng-if="product.photo[0]">-->
+                </div>
+
+                <div class="other_nav pure-u-1">
+                    <div>
+                        <div>Browse Other Products In:</div>
+                        <ul id="category_list">
+                            <li ng-repeat="category in product.categories" ng-click="categoryList(category)">{{category}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pure-u-1 pure-u-sm-1-2 pure-u-lg-7-12 pure-u-xl-2-3">
+            <div id="product_right_pane" class="pure-g">
+                <div id="product_features" class="pure-u-1 pure-u-lg-2-5 pure-u-xl-1-2">
+                    <div>
+                        <div id="stock_status">
+                            <span ng-if="product.units_available > 0">In Stock</span>
+                            <span ng-if="product.units_available <= 0">Out Of Stock</span>
+                        </div>
+                        <div id="product_short_code" class="product_property">
+                            <div class="property_caption">PRODUCT CODE</div>
+                            #{{product.short_code}}
+                        </div>
+                    </div>
+                </div>
+
+                <div id="product_buy" class="pure-u-1 pure-u-lg-3-5 pure-u-xl-1-2">
+                    <div ng-if="is_purchasable">
+                        <div id="price">
+                            <div id="selling_price"><i class="icon icon-inr"></i><span>{{product.unit_price}}</span></div>
+                            <div id="list_price" ng-if="product.mrp && product.mrp != product.unit_price">
+                                <div class="property_caption">MRP</div>
+                                <strike style="white-space: nowrap;"><i class="icon icon-inr"></i> {{product.mrp}}</strike>
+                            </div>
+                        </div>
+                        <paper-button id="cart_submit" raisedButton label=" ADD TO CART " class="primary" ng-click="addCart()"></paper-button>
+                        <div id="policy_benefits" ng-if="is_freeshipping(product) || is_cod(product)">
+                            <div>
+                                <div ng-if="is_freeshipping(product)">
+                                    <i class="icon icon-checkmark2"></i> Free Delivery
+                                </div>
+                                <div ng-if="is_cod(product)">
+                                    <i class="icon icon-checkmark2"></i> Payment On Delivery
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="product_description" class="section pure-u-1">
+                    <div>
+                        <div ng-if="product.description">
+                            <div class="section_mast"><i class="icon icon-quill"></i></div>
+                            <div class="section_title">DESCRIPTION</div>
+                            <div class="section_content">
+                                <pre>{{product.description}}</pre>
+                            </div>
+                        </div>
+                        <div class="section_mast"><i class="icon icon-truck"></i></div>
+                        <div class="section_title">Returns & Refunds</div>
+                        <div class="section_content">
+                            <div class="content">
+                                <ul>
+                                    <li>
+                                        <div ng-if="policy.cancel_before_shipping">
+                                            Cancellation charges for returns before the product is shipped: <span class="text-secondary">{{policy.cbs_charges | charges}}</span>
+                                        </div>
+                                        <div ng-if="!policy.cancel_before_shipping">
+                                            Returns are not allowed after purchase.
+                                        </div>
+                                    </li>
+                                    <li ng-if="policy.cancel_before_shipping">
+                                        <div ng-if="policy.cancel_before_delivery">
+                                            Cancellation charges for returns after shipping: <span class="text-secondary">{{policy.cbd_charges | charges}}</span>
+                                        </div>
+                                        <div ng-if="!policy.cancel_before_delivery">
+                                            Returns are not allowed after the product has been shipped by us.
+                                        </div>
+                                    </li>
+                                    <li ng-if="policy.cancel_before_shipping && policy.cancel_before_delivery">
+                                        <div ng-if="policy.cancel_after_delivery">
+                                            Cancellation charges for returns after delivery: <span class="text-secondary">{{policy.cad_charges | charges}}</span>
+                                        </div>
+                                        <div ng-if="!policy.cancel_after_delivery">
+                                            Returns are not allowed after the product has been delivered to you.
+                                        </div>
+                                    </li>
+                                    <li>For non-COD orders, full refunds are given if order is not delivered within 15 days or when defective/wrong products are delivered. Customer will have up to 3 days after delivery to claim refunds for defective/wrong shipments for non-COD orders.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="other_nav pure-u-1">
+            <div>
+                <div>Browse Other Products In:</div>
+                <ul id="category_list">
+                    <li ng-repeat="category in product.categories" ng-click="categoryList(category)">{{category}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="main-footer">
+    <div class="main-footer__container clear">
+        <div class="footer-title"><span class="lead_part">About</span> <span class="brand">${c.merchant.name.title()}</span></div>
+        <div class="pure-g main-footer__list-group">
+            <div class="nav-content pure-u-1 pure-u-sm-1-3 pure-u-md-1-4" style="text-align: right">
+                <ul class="main-footer__list">
+                    <li><a href="/privacy_policy">Privacy Policy</a></li>
+                    <li><a href="/terms_of_use">Terms of Use</a></li>
+                    <li><a href="/delivery">Delivery</a></li>
+                    <li><a href="/cancellations_and_returns">Cancellations and Returns</a></li>
+                    <li><a href="/refunds">Refunds</a></li>
+                    <li><a href="/disclaimer">Disclaimer</a></li>
+                </ul>
+            </div>
+            <div class="main-content pure-u-1 pure-u-sm-1-3 pure-u-md-1-2">
+                <div id="footer_about"><p class="small">${c.merchant.description}</p></div>
+            </div>
+            <div class="contact-content pure-u-1 pure-u-sm-1-3 pure-u-md-1-4">
+                <div class="main-footer__contacts">
+                    <div>${c.merchant.name.title()}</div>
+                    <div>${c.org.registered_address.street}</div>
+                    <div>${c.org.registered_address.city} - ${c.org.registered_address.pincode}</div>
+                    <div>+91 ${c.org.registered_address.phone}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<div id="load-msg">
+    <i class="icon icon-spin icon-spinner"></i> &nbsp; &nbsp; Loading...
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-animate.js"></script>
+
+<script src="scripts/main.min.js"></script>
+
+<script>
     app.provider('KyashConstants', function () {
         // default values
         var values = {
@@ -9,7 +265,8 @@
             },
             is_fb_store: ${'true' if c.is_fb_store else 'false'},
             cart_item_count: ${c.cart_item_count},
-            cart_id: '${c.cart_order.key.id() if c.cart_order else ""}'
+            cart_id: '${c.cart_order.key.id() if c.cart_order else ""}',
+            policy: ${c.sales_policy_str}
         };
         return {
             $get: function () {
@@ -21,6 +278,7 @@
         $rootScope.is_fb_store = KyashConstants.is_fb_store;
         $rootScope.cart_item_count = KyashConstants.cart_item_count;
         $rootScope.cart_id = KyashConstants.cart_id;
+        $rootScope.policy = KyashConstants.policy;
 
         if($rootScope.is_fb_store) {
             window.fbAsyncInit = function() {
@@ -62,6 +320,19 @@
             else {
                 window.location = url;
             }
-        }
+        };
+
+        $rootScope.is_freeshipping = function(product) {
+            return $rootScope.policy.free_shipping_min_order <= product.unit_price
+        };
+
+        $rootScope.is_cod = function(product) {
+            var policy = $rootScope.policy;
+            return policy.has_cod && policy.min_amount_cod <= product.unit_price && policy.max_amount_cod >= product.unit_price
+        };
     });
-</script></body></html>
+</script>
+
+<!-- Built with love using Web Starter Kit -->
+</body>
+</html>
