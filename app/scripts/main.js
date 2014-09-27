@@ -139,7 +139,7 @@ function HomeCtrl($scope, $rootScope, $location, Requests) {
     };
 
     $scope.is_active_category = function (cat) {
-        return that.activeCategory != null && that.activeCategory == category
+        return that.activeCategory != null && that.activeCategory == cat
     }
 }
 
