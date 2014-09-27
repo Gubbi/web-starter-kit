@@ -437,5 +437,8 @@ paper-fab {
   z-index: 1000;
   padding: 12px 18px;
   color: $gray100;
+  text-align: center;
+  white-space: nowrap;
+  width: 200px;
   display: none;
 }

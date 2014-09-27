@@ -114,6 +114,7 @@ function HomeCtrl($scope, $rootScope, $location, Requests) {
     'use strict';
     $scope.categories = [];
     $scope.activeCategory = null;
+    var that = $scope;
 
     Requests.getRequest('/general_details', {merchant: $rootScope.merchant.id}, function(response) {
         $scope.merchant = response;
@@ -129,7 +130,8 @@ function HomeCtrl($scope, $rootScope, $location, Requests) {
     };
 
     $scope.set_active_category = function (cat) {
-        $scope.activeCategory = cat;
+        console.log('Setting active Category to: ', cat);
+        that.activeCategory = cat;
     }
 }
 
@@ -137,6 +139,7 @@ function CtgCtrl($scope, $rootScope, $location, $routeParams, Requests) {
     'use strict';
 
     $scope.refreshProductList = function(category) {
+        console.log('Active Category', $scope.activeCategory);
         if($scope.activeCategory != null && $scope.activeCategory == category) {
             if(!$('#products_list').is(":visible")) {
                 $('#product_board').fadeOut('slow', function() { $('#products_list').fadeIn(); });
@@ -146,11 +149,13 @@ function CtgCtrl($scope, $rootScope, $location, $routeParams, Requests) {
         }
         else {
             Requests.getRequest('/category/' + category, {merchant: $rootScope.merchant.id}, function (data) {
+                console.log('Setting data for: ', category);
+
                 $scope.productList = data.products;
                 $scope.set_active_category(category);
 
                 if (!$('#products_list').is(":visible")) {
-                    $('#products_list').fadeIn('slow', function () { $('#product_board').fadeOut(); });
+                    $('#product_board').fadeOut('slow', function() { $('#products_list').fadeIn(); });
                 }
                 document.body.scrollTop = document.documentElement.scrollTop = 0;
                 $('#load-msg').hide();
