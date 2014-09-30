@@ -359,3 +359,7 @@ header .logo {
 button {
   white-space: nowrap;
 }
+
+body.work_in_progress {
+  cursor: progress !important;
+}

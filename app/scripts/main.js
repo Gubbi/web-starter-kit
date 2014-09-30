@@ -1,3 +1,5 @@
+/* global angular:false */
+
 /*!
  *
  *  Web Starter Kit
@@ -49,129 +51,102 @@
   });
 })();
 
+
+//App JS starts here.
 var app = angular.module('shop', ['ngRoute']);
 
 app.directive('scalable', function() {
+    'use strict';
     return {
-        link: function(scope, element, attrs) {
-            element.bind("load" , function(event){
+        link: function(scope, element) {
+            element.bind('load', function() {
                 var iw = element[0].naturalWidth;
                 var ih = element[0].naturalHeight;
-                var cw = $(element).parent().outerWidth();
-                var ch = $(element).parent().outerHeight();
+                var cw = element.parent()[0].clientWidth;
+                var ch = element.parent()[0].clientHeight;
 
                 var pw = iw*ch/ih;
                 console.log([iw, ih, cw, ch, pw]);
 
-                if (iw > cw && ih > ch) element.addClass(pw > cw ? "cropWidth": "cropHeight");
+                if (iw > cw && ih > ch) {
+                    element.addClass(pw > cw ? 'cropWidth': 'cropHeight');
+                }
             });
         }
-    }
+    };
 });
 
-app.filter("charges", function() {
-  return function(input) {
-    return input.kind=='percentage'? input.price.toString() + '%' : '<i class="icon icon-inr"></i>' + input.price.toString();
-  };
-});
-
-app.service('Requests', function() {
+app.directive('hoverlift', function() {
     'use strict';
-
-    this.getRequest = function(url, data, success) {
-        $.ajax({
-            url: url,
-            type: 'GET',
-            async: false,
-            data: data,
-            headers : {'Accept-Encodings': 'json'},
-            dataType: 'json',
-            error: function(xhr, status, error) { }
-        }).success(function(response, status) {
-            if (success) {
-                success(response);
-            }
-        });
-    };
-
-    this.postRequest = function (url, data, success) {
-        $.ajax({
-            url: url,
-            type: 'POST',
-            async: false,
-            data: data,
-            headers : {'Accept-Encodings': 'json'},
-            dataType: 'json',
-            error: function(xhr, status, error) { }
-        }).success(function(response, status) {
-            if (success) {
-                success(response);
-            }
-        });
+    return {
+        link: function(scope, element) {
+            element.bind('mouseenter', function() {
+                element.find('paper-shadow').attr('z', '1');
+            });
+            element.bind('mouseleave', function() {
+                element.find('paper-shadow').attr('z', '0');
+            });
+        }
     };
 });
 
-function HomeCtrl($scope, $rootScope, $location, Requests) {
+app.run(function($http) {
+    'use strict';
+    $http.defaults.headers.common['Accept-Encodings'] = 'json';
+});
+
+app.filter('charges', function() {
+    'use strict';
+    return function(input) {
+        return input.kind==='percentage'? input.price.toString() + '%' : '₹' + input.price.toString();
+    };
+});
+
+app.service('Requests', function($http) {
+    'use strict';
+    this.get = function(url, data, success) { $http.get(url, {'params': data}).success(success); };
+    this.post = function (url, data, success) { $http.post(url, data).success(success); };
+});
+
+app.controller('HomeCtrl', function ($scope, $rootScope, Requests) {
     'use strict';
     $scope.categories = [];
-    $scope.activeCategory = null;
-    var that = $scope;
+    $scope.active = {category: null, view: 'list', loading: false};
 
-    Requests.getRequest('/general_details', {merchant: $rootScope.merchant.id}, function(response) {
+    Requests.get('/general_details', {merchant: $rootScope.merchant.id}, function(response) {
         $scope.merchant = response;
-        $.each(response.categories, function(key, value) {
-            $scope.categories.push(key);
-        });
+        angular.forEach(response.categories, function(value, key) {
+          this.push(value[0]);
+        }, $scope.categories);
     });
 
     $scope.categoryList = function (cat) {
-        $('#load-msg').css('display', 'block');
         $rootScope.$broadcast('categorySet', {category: cat});
     };
+});
 
-    $scope.set_active_category = function (cat) {
-        console.log('Setting active Category to: ', cat);
-        that.activeCategory = cat;
-    };
-
-    $scope.get_active_category = function () {
-        return that.activeCategory;
-    };
-
-    $scope.is_active_category = function (cat) {
-        return that.activeCategory != null && that.activeCategory == cat
-    }
-}
-
-function CtgCtrl($scope, $rootScope, $location, $routeParams, Requests) {
+app.controller('CtgCtrl', function ($scope, $rootScope, Requests) {
     'use strict';
 
     $scope.refreshProductList = function(category) {
-        console.log('Active Category', $scope.get_active_category());
-        if($scope.is_active_category(category)) {
-            if(!$('#products_list').is(":visible")) {
-                $('#product_board').fadeOut('slow', function() { $('#products_list').fadeIn(); });
-            }
+        $scope.active.loading = true;
+        if($scope.active.category === category) {
+            $scope.active.view = 'list';
             document.body.scrollTop = document.documentElement.scrollTop = 0;
-            $('#load-msg').css('display', 'none');
+            $scope.active.loading = false;
         }
         else {
-            Requests.getRequest('/category/' + category, {merchant: $rootScope.merchant.id}, function (data) {
-                console.log('Setting data for: ', category);
-
+            Requests.get('/category/' + category, {merchant: $rootScope.merchant.id}, function (data) {
                 $scope.productList = data.products;
-                $scope.set_active_category(category);
-
-                if (!$('#products_list').is(":visible")) {
-                    $('#product_board').fadeOut('slow', function() { $('#products_list').fadeIn(); });
-                }
+                $scope.active.category = category;
+                $scope.active.view = 'list';
                 document.body.scrollTop = document.documentElement.scrollTop = 0;
-                $('#load-msg').css('display', 'none');
+                $scope.active.loading = false;
             });
         }
     };
 
-    if($scope.activeCategory == null) {
+    if($scope.active.category === null) {
         $scope.refreshProductList('Featured');
     }
 
@@ -182,62 +157,29 @@ function CtgCtrl($scope, $rootScope, $location, $routeParams, Requests) {
     $scope.showProduct = function(product) {
         $rootScope.$broadcast('productSet', {product: product});
     };
+});
 
-    //Sorting start
-//    var hash = {'Lowest first': 'unit_price', 'Highest first': '-unit_price', 'Popular': ''};
-//    $scope.ordering = hash[$scope.sort];
-//
-//    $scope.productDetails = function(shortCode) {
-//        $location.url('/product/'+shortCode);
-//    };
-}
-
-function PdtCtrl($scope, $rootScope, $location, Requests) {
+app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
     'use strict';
 
     $scope.$on('productSet', function(event, args) {
         $scope.product = args.product;
-        $scope.is_purchasable = args.product.units_available > 0 && args.product.unit_price > 0;
-
-        $('#products_list').fadeOut('slow', function() {
-            document.body.scrollTop = document.documentElement.scrollTop = 0;
-            $('#product_board').fadeIn().removeAttr('hidden');
-        });
+        $scope.isPurchasable = args.product.units_available > 0 && args.product.unit_price > 0;
+        $scope.active.view = 'product';
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
     });
 
     $scope.addCart = function() {
-        $('#load-msg').css('display', 'block');
+        $scope.active.loading = true;
+        Requests.post('/cart/', {
+            'product_id': $scope.product.id,
+            merchant: $rootScope.merchant.id}, function(response) {
 
-        var data = {product_id: $scope.product.id, merchant: $rootScope.merchant.id};
-        Requests.postRequest('/cart/', data, function(response) {
             $scope.cart = response;
-            $rootScope.cart_id = response.cart_id;
-            $rootScope.cart_item_count = response.cart_item_count;
-
-            $rootScope.go_to_cart();
+            $rootScope.cartId = response.cart_id;
+            $rootScope.cartItemCount = response.cart_item_count;
+            $rootScope.goToCart();
+            $scope.active.loading = false;
         });
     };
-}
-
-//function CartCtrl($scope, $location, Requests) {
-//    'use strict';
-//
-//    Requests.getRequest('/cart/', function(data) {
-//        $scope.cart = data;
-//    });
-//
-//    $scope.updateCart = function(quantity, productId, remove) {
-//        Requests.postRequest('/update_amount/', {
-//                'productId': productId,
-//                'remove_product': remove,
-//                'quantity': quantity
-//            }, function(data) {
-//                $scope.cart = data;
-//            }
-//        );
-//    };
-//
-//    $scope.checkout = function(){
-//        window.location = '/checkout';
-//    };
-//}
+});

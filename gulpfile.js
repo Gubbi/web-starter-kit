@@ -26,6 +26,8 @@ var del = require('del');
 var runSequence = require('run-sequence');
 var browserSync = require('browser-sync');
 var pagespeed = require('psi');
+var ngAnnotate = require('gulp-ng-annotate');
+var vulcanize = require('gulp-vulcanize');
 var reload = browserSync.reload;
 
 var AUTOPREFIXER_BROWSERS = [
@@ -80,11 +82,14 @@ gulp.task('fonts', function () {
 });
 
 // Copy Bower Component Files To Dist
-gulp.task('components', function () {
-  return gulp.src(['app/bower_components/**'])
-    .pipe(gulp.dest('dist/bower_components'))
-    .pipe($.size({title: 'bower_components'}));
-});
+//gulp.task('components', function () {
+////  gulp.src(['app/components/**'])
+////    .pipe(gulp.dest('dist/components'))
+////    .pipe($.size({title: 'components'}));
+//  return gulp.src(['app/bower_components/**'])
+//    .pipe(gulp.dest('dist/bower_components'))
+//    .pipe($.size({title: 'bower_components'}));
+//});
 
 // Compile and Automatically Prefix Stylesheets
 gulp.task('styles', function () {
@@ -92,7 +97,6 @@ gulp.task('styles', function () {
   return gulp.src([
     'app/styles/*.scss',
     'app/styles/**/*.css',
-    'app/styles/components/components.scss'
   ])
     .pipe($.changed('styles', {extension: '.scss'}))
     .pipe($.rubySass({
@@ -112,10 +116,14 @@ gulp.task('styles', function () {
 gulp.task('html', function () {
   var assets = $.useref.assets({searchPath: '{.tmp,app}'});
 
-  return gulp.src('app/**/*.html')
+  return gulp.src(['app/**/*.html', '!app/bower_components/**/*.html'])
     .pipe(assets)
     // Concatenate And Minify JavaScript
-//    .pipe($.if('*.js', $.uglify({preserveComments: 'some'})))
+    .pipe($.if('*.js', ngAnnotate()))
+    .pipe($.if('*.js', $.uglify({preserveComments: 'some'})))
+
+    // Polymer Components
+    .pipe($.if('*.html', vulcanize({dest: 'dist', inline: true})))
     // Remove Any Unused CSS
     // Note: If not using the Style Guide, you can delete it from
     // the next line to only include styles your project uses.
@@ -134,10 +142,8 @@ gulp.task('html', function () {
     .pipe($.if('*.css', $.csso()))
     .pipe(assets.restore())
     .pipe($.useref())
-    // Update Production Style Guide Paths
-    .pipe($.replace('components/components.css', 'components/main.min.css'))
     // Minify Any HTML
-//    .pipe($.if('*.html', $.minifyHtml()))
+    .pipe($.if('*.html', $.minifyHtml({empty: true})))
     // Output Files
     .pipe(gulp.dest('dist'))
     .pipe($.size({title: 'html'}));
@@ -178,7 +184,7 @@ gulp.task('serve:dist', ['default'], function () {
 
 // Build Production Files, the Default Task
 gulp.task('default', ['clean'], function (cb) {
-  runSequence('styles', ['jshint', 'html', 'images', 'fonts', 'components', 'copy'], cb);
+  runSequence('styles', ['jshint', 'html', 'images', 'fonts', 'copy'], cb);
 //  runSequence('styles', ['html', 'images', 'fonts', 'copy'], cb);
 });
 

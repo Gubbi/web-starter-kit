@@ -22,21 +22,22 @@
     <meta name="msapplication-TileColor" content="#3372DF">
 
     <!-- Page styles -->
-    <link rel="stylesheet" href="styles/main.css">
+
+    <!-- build:css styles/main.css -->
+    <link rel="stylesheet" href="../.tmp/styles/main.css">
+    <!-- endbuild -->
 
     <!-- Polymer Polyfill -->
-    <script src="components/platform/platform.js"></script>
-
-    <link rel="import" href="components/paper-fab/paper-fab.html">
-    <link rel="import" href="/scripts/kyash-icons.html">
+    <script src="bower_components/platform/platform.js"></script>
+    <link rel="import" href="bower_components/paper-button/paper-button.html">
 </head>
 
-<body ng-app="shop" ng-controller="HomeCtrl" ng-class="{fb_store: is_fb_store}">
+<body ng-app="shop" ng-controller="HomeCtrl" ng-class="{fb_store: isFBStore, work_in_progress: active.loading}" class="work_in_progress">
 
 <div id="fb-root"></div>
 <kyash-icons></kyash-icons>
 
-<header class="app-bar promote-layer ng-cloak" ng-cloak ng-class="{hidden: is_fb_store}">
+<header class="app-bar promote-layer ng-cloak" ng-cloak ng-class="{hidden: isFBStore}" class="hidden">
     <div class="app-bar-container">
         <button class="menu"><img src="images/hamburger.svg" alt="Menu"></button>
         <h1 class="logo" ng-click="reload()">
@@ -49,28 +50,28 @@
 <nav class="navdrawer-container promote-layer ng-cloak" ng-cloak>
     <h4>Navigation</h4>
     <ul>
-        <li ng-class="{active: activeCategory == 'Featured'}"><a href="#" ng-click="categoryList('Featured')">FEATURED</a></li>
-        <li ng-repeat="cat in categories | filter:'!Featured'" ng-class="{active: activeCategory == cat}">
+        <li ng-class="{active: active.category == 'Featured'}" class="active"><a href="#" ng-click="categoryList('Featured')">FEATURED</a></li>
+        <li ng-repeat="cat in categories | filter:'!Featured'" ng-class="{active: active.category == cat}">
             <a href="#" ng-click="categoryList(cat)">{{cat | uppercase}}</a>
         </li>
         <li id="cart_menu_icon">
             <div>
-                <a href="#" title="Shopping Cart" ng-click="go_to_cart();"> <i class="icon icon-cart"></i></a>
-                <div class="notify_bubble" ng-class="{hidden: cart_item_count <= 0}">{{cart_item_count}}</div>
+                <a href="#" title="Shopping Cart" ng-click="goToCart();"> <i class="icon icon-cart"></i></a>
+                <div class="notify_bubble" ng-show="cartItemCount > 0">{{cartItemCount}}</div>
             </div>
         </li>
     </ul>
 </nav>
 
 <main class="ng-cloak" ng-cloak>
-    <div id="products_list" class="pure-g" ng-controller="CtgCtrl">
+    <div id="products_list" class="pure-g" ng-controller="CtgCtrl" ng-show="active.view=='list'">
         <div class="product pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4 pure-u-xl-1-4" ng-repeat="product in productList">
-            <div class="thumbnail" onmouseover="$(this).find('.thumbnail_shadow').attr('z', '1');" onmouseout="$(this).find('.thumbnail_shadow').attr('z', '0');">
-                <div ng-click="showProduct(product)">
-                    <paper-shadow class="thumbnail_shadow" z="0" animated="true"></paper-shadow>
+            <div class="thumbnail">
+                <div ng-click="showProduct(product)" hoverlift>
+                    <paper-shadow z="0" animated="true"></paper-shadow>
                     <div class="image_detail">
-                        <img ng-src="{{ product.photo[0][2] }}" scalable/>
-                        <!--<img src="https://unsplash.it/300/450/?random" scalable/>-->
+                        <!--<img ng-src="{{ product.photo[0][2] }}" scalable/>-->
+                        <img ng-src="https://unsplash.it/300/500/?random" scalable/>
                     </div>
                     <div class="details">
                         <div class="name">{{product.name}}</div>
@@ -81,7 +82,7 @@
                                         <div ng-if="product.mrp && product.mrp != product.unit_price"><strike>&#8377; {{product.mrp}}</strike></div>
                                     </div>
                                     <div ng-if="product.unit_price">
-                                        <i class="icon icon-inr"></i> {{product.unit_price}}
+                                        <i class="icon icon-inr" style="vertical-align: bottom;"></i> {{product.unit_price}}
                                     </div>
                                 </div>
                             </div>
@@ -96,14 +97,14 @@
         </div>
     </div>
 
-    <div id="product_board" class="pure-g" ng-controller="PdtCtrl" hidden>
+    <div id="product_board" class="pure-g" ng-controller="PdtCtrl" ng-show="active.view=='product'">
         <div id="product_title" class="pure-u-1"><span>{{product.name}}</span></div>
 
         <div class="pure-u-1 pure-u-sm-1-2 pure-u-lg-5-12 pure-u-xl-1-3">
             <div id="product_left_pane" class="pure-g">
                 <div id="product_image" class="pure-u-1">
-                    <img ng-src="{{ product.photo[0][1] }}" ng-if="product.photo[0]">
-                    <!--<img src="https://unsplash.it/1000/1500/?random" ng-if="product.photo[0]">-->
+                    <!--<img ng-src="{{ product.photo[0][1] }}" ng-if="product.photo[0]">-->
+                    <img ng-src="https://unsplash.it/600/1000/?random" ng-if="product.photo[0]">
                 </div>
 
                 <div class="other_nav pure-u-1">
@@ -133,7 +134,7 @@
                 </div>
 
                 <div id="product_buy" class="pure-u-1 pure-u-lg-3-5 pure-u-xl-1-2">
-                    <div ng-if="is_purchasable">
+                    <div ng-if="isPurchasable">
                         <div id="price">
                             <div id="selling_price"><i class="icon icon-inr"></i><span>{{product.unit_price}}</span></div>
                             <div id="list_price" ng-if="product.mrp && product.mrp != product.unit_price">
@@ -171,7 +172,7 @@
                                 <ul>
                                     <li>
                                         <div ng-if="policy.cancel_before_shipping">
-                                            Cancellation charges for returns before the product is shipped: <span class="text-secondary">{{policy.cbs_charges | charges}}</span>
+                                            Cancellation charges for returns before the product is shipped: <span class="text-secondary"> {{policy.cbs_charges | charges}} </span>
                                         </div>
                                         <div ng-if="!policy.cancel_before_shipping">
                                             Returns are not allowed after purchase.
@@ -179,7 +180,7 @@
                                     </li>
                                     <li ng-if="policy.cancel_before_shipping">
                                         <div ng-if="policy.cancel_before_delivery">
-                                            Cancellation charges for returns after shipping: <span class="text-secondary">{{policy.cbd_charges | charges}}</span>
+                                            Cancellation charges for returns after shipping: <span class="text-secondary"> {{policy.cbd_charges | charges}} </span>
                                         </div>
                                         <div ng-if="!policy.cancel_before_delivery">
                                             Returns are not allowed after the product has been shipped by us.
@@ -187,7 +188,7 @@
                                     </li>
                                     <li ng-if="policy.cancel_before_shipping && policy.cancel_before_delivery">
                                         <div ng-if="policy.cancel_after_delivery">
-                                            Cancellation charges for returns after delivery: <span class="text-secondary">{{policy.cad_charges | charges}}</span>
+                                            Cancellation charges for returns after delivery: <span class="text-secondary"> {{policy.cad_charges | charges}} </span>
                                         </div>
                                         <div ng-if="!policy.cancel_after_delivery">
                                             Returns are not allowed after the product has been delivered to you.
@@ -241,11 +242,10 @@
     </div>
 </footer>
 
-<div id="load-msg">
+<div id="load-msg" ng-show="active.loading">
     <i class="icon icon-spin icon-spinner"></i> &nbsp; &nbsp; Loading...
 </div>
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
 
@@ -262,9 +262,9 @@
                 short_code: '${c.merchant.short_code}',
                 custom_domain: '${c.merchant.custom_domain or ""}'
             },
-            is_fb_store: ${'true' if c.is_fb_store else 'false'},
-            cart_item_count: ${c.cart_item_count},
-            cart_id: '${c.cart_order.key.id() if c.cart_order else ""}',
+            isFBStore: ${'true' if c.is_fb_store else 'false'},
+            cartItemCount: ${c.cart_item_count},
+            cartId: '${c.cart_order.key.id() if c.cart_order else ""}',
             policy: ${c.sales_policy_str}
         };
         return {
@@ -274,12 +274,12 @@
         };
     }).run(function ($rootScope, KyashConstants) {
         $rootScope.merchant = KyashConstants.merchant;
-        $rootScope.is_fb_store = KyashConstants.is_fb_store;
-        $rootScope.cart_item_count = KyashConstants.cart_item_count;
-        $rootScope.cart_id = KyashConstants.cart_id;
+        $rootScope.isFBStore = KyashConstants.isFBStore;
+        $rootScope.cartItemCount = KyashConstants.cartItemCount;
+        $rootScope.cartId = KyashConstants.cartId;
         $rootScope.policy = KyashConstants.policy;
 
-        if($rootScope.is_fb_store) {
+        if($rootScope.isFBStore) {
             window.fbAsyncInit = function() {
                 FB.init({
                     appId   : '${config.FB_APP_ID}', //Your facebook APP here
@@ -301,7 +301,7 @@
             }(document, 'script', 'facebook-jssdk'));
         }
 
-        $rootScope.go_to_cart = function() {
+        $rootScope.goToCart = function() {
             var url = 'http://';
             if ($rootScope.merchant.custom_domain.trim() != '') {
                 url += $rootScope.merchant.custom_domain.trim() + '/';
@@ -309,9 +309,9 @@
             else {
                 url += $rootScope.merchant.short_code.trim() + '.kyash.com/';
             }
-            url += 'cart/?cart_id=' + $rootScope.cart_id;
+            url += 'cart/?cart_id=' + $rootScope.cartId;
 
-            if($rootScope.is_fb_store) {
+            if($rootScope.isFBStore) {
                 window.open(url);
             }
             else {
