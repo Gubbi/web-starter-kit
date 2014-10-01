@@ -1,4 +1,5 @@
 /* global angular:false */
+/*jshint camelcase: true */
 
 /*!
  *
@@ -123,6 +124,28 @@ app.controller('HomeCtrl', function ($scope, $rootScope, Requests) {
     $scope.categoryList = function (cat) {
         $rootScope.$broadcast('categorySet', {category: cat});
     };
+
+    $scope.goToCart = function() {
+        var url = 'http://';
+        if ($rootScope.merchant.customDomain.trim() !== '') {
+            url += $rootScope.merchant.customDomain.trim() + '/';
+        }
+        else {
+            url += $rootScope.merchant.shortCode.trim() + '.kyash.com/';
+        }
+        url += 'cart/?cart_id=' + $rootScope.cartId;
+
+        if($rootScope.isFBStore) {
+            window.open(url);
+        }
+        else {
+            window.location = url;
+        }
+    };
+
+    $scope.reload = function() {
+        window.location = '/';
+    };
 });
 
 app.controller('CtgCtrl', function ($scope, $rootScope, Requests) {
@@ -164,10 +187,22 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
 
     $scope.$on('productSet', function(event, args) {
         $scope.product = args.product;
+        /*jshint camelcase: false */
         $scope.isPurchasable = args.product.units_available > 0 && args.product.unit_price > 0;
         $scope.active.view = 'product';
         document.body.scrollTop = document.documentElement.scrollTop = 0;
     });
+
+    $scope.isFreeshipping = function(product) {
+        /*jshint camelcase: false */
+        return $rootScope.policy.free_shipping_min_order <= product.unit_price;
+    };
+
+    $scope.isCOD = function(product) {
+        var policy = $rootScope.policy;
+        /*jshint camelcase: false */
+        return policy.has_cod && policy.min_amount_cod <= product.unit_price && policy.max_amount_cod >= product.unit_price;
+    };
 
     $scope.addCart = function() {
         $scope.active.loading = true;
@@ -176,6 +211,7 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
             merchant: $rootScope.merchant.id}, function(response) {
 
             $scope.cart = response;
+            /*jshint camelcase: false */
             $rootScope.cartId = response.cart_id;
             $rootScope.cartItemCount = response.cart_item_count;
             $rootScope.goToCart();

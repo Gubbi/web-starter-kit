@@ -82,14 +82,12 @@ gulp.task('fonts', function () {
 });
 
 // Copy Bower Component Files To Dist
-//gulp.task('components', function () {
-////  gulp.src(['app/components/**'])
-////    .pipe(gulp.dest('dist/components'))
-////    .pipe($.size({title: 'components'}));
-//  return gulp.src(['app/bower_components/**'])
-//    .pipe(gulp.dest('dist/bower_components'))
-//    .pipe($.size({title: 'bower_components'}));
-//});
+gulp.task('components', function () {
+  return gulp.src(['app/bower_components/**/*.js', 'app/components/**/*.js', '!app/bower_components/**/gulpfile.js', '!app/bower_components/**/tests/**/*.js'])
+    .pipe($.uglify())
+    .pipe(gulp.dest('dist/bower_components'))
+    .pipe($.size({title: 'components'}));
+});
 
 // Compile and Automatically Prefix Stylesheets
 gulp.task('styles', function () {
@@ -116,14 +114,11 @@ gulp.task('styles', function () {
 gulp.task('html', function () {
   var assets = $.useref.assets({searchPath: '{.tmp,app}'});
 
-  return gulp.src(['app/**/*.html', '!app/bower_components/**/*.html'])
+  return gulp.src(['app/**/*.html', '!app/bower_components/**/*.html', '!app/components/**/*.html'])
     .pipe(assets)
     // Concatenate And Minify JavaScript
     .pipe($.if('*.js', ngAnnotate()))
     .pipe($.if('*.js', $.uglify({preserveComments: 'some'})))
-
-    // Polymer Components
-    .pipe($.if('*.html', vulcanize({dest: 'dist', inline: true})))
     // Remove Any Unused CSS
     // Note: If not using the Style Guide, you can delete it from
     // the next line to only include styles your project uses.
@@ -143,6 +138,7 @@ gulp.task('html', function () {
     .pipe(assets.restore())
     .pipe($.useref())
     // Minify Any HTML
+    .pipe($.if('*.html', vulcanize({dest: 'dist', resourceDir: 'app'})))
     .pipe($.if('*.html', $.minifyHtml({empty: true})))
     // Output Files
     .pipe(gulp.dest('dist'))
@@ -184,8 +180,7 @@ gulp.task('serve:dist', ['default'], function () {
 
 // Build Production Files, the Default Task
 gulp.task('default', ['clean'], function (cb) {
-  runSequence('styles', ['jshint', 'html', 'images', 'fonts', 'copy'], cb);
-//  runSequence('styles', ['html', 'images', 'fonts', 'copy'], cb);
+  runSequence('styles', ['jshint', 'html', 'images', 'fonts', 'components', 'copy'], cb);
 });
 
 // Run PageSpeed Insights

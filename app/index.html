@@ -9,22 +9,22 @@
 
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
-    <link rel="icon" sizes="192x192" href="images/touch/chrome-touch-icon-192x192.png">
+    <link rel="icon" sizes="192x192" href="/images/touch/chrome-touch-icon-192x192.png">
 
     <!-- Add to homescreen for Safari on iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="${c.merchant.name.title()} Online Store">
-    <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="/images/apple-touch-icon-precomposed.png">
 
     <!-- Tile icon for Win8 (144x144 + tile color) -->
-    <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileImage" content="/images/touch/ms-touch-icon-144x144-precomposed.png">
     <meta name="msapplication-TileColor" content="#3372DF">
 
     <!-- Page styles -->
 
-    <!-- build:css styles/main.css -->
-    <link rel="stylesheet" href="../.tmp/styles/main.css">
+    <!-- build:css /styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
 
     <!-- Polymer Polyfill -->
@@ -143,12 +143,12 @@
                             </div>
                         </div>
                         <paper-button id="cart_submit" raisedButton label=" ADD TO CART " class="primary" ng-click="addCart()"></paper-button>
-                        <div id="policy_benefits" ng-if="is_freeshipping(product) || is_cod(product)">
+                        <div id="policy_benefits" ng-if="isFreeshipping(product) || isCOD(product)">
                             <div>
-                                <div ng-if="is_freeshipping(product)">
+                                <div ng-if="isFreeshipping(product)">
                                     <i class="icon icon-checkmark2"></i> Free Delivery
                                 </div>
-                                <div ng-if="is_cod(product)">
+                                <div ng-if="isCOD(product)">
                                     <i class="icon icon-checkmark2"></i> Payment On Delivery
                                 </div>
                             </div>
@@ -259,8 +259,8 @@
         var values = {
             merchant: {
                 id: '${c.merchant.key.id()}',
-                short_code: '${c.merchant.short_code}',
-                custom_domain: '${c.merchant.custom_domain or ""}'
+                shortCode: '${c.merchant.short_code}',
+                customDomain: '${c.merchant.custom_domain or ""}'
             },
             isFBStore: ${'true' if c.is_fb_store else 'false'},
             cartItemCount: ${c.cart_item_count},
@@ -273,11 +273,7 @@
             }
         };
     }).run(function ($rootScope, KyashConstants) {
-        $rootScope.merchant = KyashConstants.merchant;
-        $rootScope.isFBStore = KyashConstants.isFBStore;
-        $rootScope.cartItemCount = KyashConstants.cartItemCount;
-        $rootScope.cartId = KyashConstants.cartId;
-        $rootScope.policy = KyashConstants.policy;
+        angular.extend($rootScope, KyashConstants);
 
         if($rootScope.isFBStore) {
             window.fbAsyncInit = function() {
@@ -300,40 +296,8 @@
                 fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'facebook-jssdk'));
         }
-
-        $rootScope.goToCart = function() {
-            var url = 'http://';
-            if ($rootScope.merchant.custom_domain.trim() != '') {
-                url += $rootScope.merchant.custom_domain.trim() + '/';
-            }
-            else {
-                url += $rootScope.merchant.short_code.trim() + '.kyash.com/';
-            }
-            url += 'cart/?cart_id=' + $rootScope.cartId;
-
-            if($rootScope.isFBStore) {
-                window.open(url);
-            }
-            else {
-                window.location = url;
-            }
-        };
-
-        $rootScope.is_freeshipping = function(product) {
-            return $rootScope.policy.free_shipping_min_order <= product.unit_price
-        };
-
-        $rootScope.is_cod = function(product) {
-            var policy = $rootScope.policy;
-            return policy.has_cod && policy.min_amount_cod <= product.unit_price && policy.max_amount_cod >= product.unit_price
-        };
-
-        $rootScope.reload = function() {
-            window.location = '/'
-        }
     });
 </script>
-
 <!-- Built with love using Web Starter Kit -->
 </body>
 </html>
