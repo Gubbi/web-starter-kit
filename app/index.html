@@ -262,7 +262,7 @@
             isFBStore: ${'true' if c.is_fb_store else 'false'},
             cartItemCount: ${c.cart_item_count},
             cartId: '${c.cart_order.key.id() if c.cart_order else ""}',
-            policy: ${c.sales_policy_str}
+            policy: ${c.merchant.sales_policy}
         };
         return {
             $get: function () {
