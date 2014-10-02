@@ -67,7 +67,6 @@ app.directive('scalable', function() {
                 var ch = element.parent()[0].clientHeight;
 
                 var pw = iw*ch/ih;
-                console.log([iw, ih, cw, ch, pw]);
 
                 if (iw > cw && ih > ch) {
                     element.addClass(pw > cw ? 'cropWidth': 'cropHeight');
