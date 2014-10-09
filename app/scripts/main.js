@@ -124,6 +124,14 @@ app.controller('HomeCtrl', function ($scope, $rootScope, Requests) {
         $rootScope.$broadcast('categorySet', {category: cat});
     };
 
+    $scope.track_order = function() {
+        window.location = '/'+$scope.code;
+//        Requests.get('/' + $scope.code,{}, function(response) {
+//            console.log(response);
+//            $rootScope.$broadcast('trackSet', {ord_details: response});
+//        });
+    };
+
     $scope.goToCart = function() {
         var url = 'http://';
         if ($rootScope.merchant.customDomain.trim() !== '') {
@@ -160,6 +168,7 @@ app.controller('CtgCtrl', function ($scope, $rootScope, Requests) {
         else {
             Requests.get('/category/' + category, {merchant: $rootScope.merchant.id}, function (data) {
                 $scope.productList = data.products;
+                $scope.attributes = data.attributes;
                 $scope.active.category = category;
                 $scope.active.view = 'list';
                 document.body.scrollTop = document.documentElement.scrollTop = 0;
@@ -176,8 +185,8 @@ app.controller('CtgCtrl', function ($scope, $rootScope, Requests) {
         $scope.refreshProductList(args.category);
     });
 
-    $scope.showProduct = function(product) {
-        $rootScope.$broadcast('productSet', {product: product});
+    $scope.showProduct = function(product, attributes) {
+        $rootScope.$broadcast('productSet', {product: product, attributes: attributes});
     };
 });
 
@@ -186,6 +195,10 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
 
     $scope.$on('productSet', function(event, args) {
         $scope.product = args.product;
+        $scope.attributes = args.attributes;
+        Requests.get('/product_variants', {'prod_id': args.product.id}, function(data){
+            $scope.variants = data.variants;
+        });
         /*jshint camelcase: false */
         $scope.isPurchasable = args.product.units_available > 0 && args.product.unit_price > 0;
         $scope.active.view = 'product';
@@ -217,4 +230,16 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
             $scope.active.loading = false;
         });
     };
+});
+
+app.controller('TrackCtrl', function ($scope, $rootScope, Requests) {
+    'use strict';
+
+    $scope.$on('trackSet', function(event, args) {
+        $scope.odetails = args.ord_details;
+        $scope.active.view = 'odetails';
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
+    });
+
+
 });

@@ -157,7 +157,7 @@ gulp.task('serve', ['styles'], function () {
     //       will present a certificate warning in the browser.
     https: true,
 //    server: ['.tmp', 'app']
-      proxy: 'vaathsalya.localhost:8082'
+      proxy: 'ikyash.localhost:8082'
   });
 
   gulp.watch(['app/**/*.html'], reload);

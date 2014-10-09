@@ -41,7 +41,17 @@
             <img ng-src="{{ merchant.logo }}" title="{{ merchant.name }}" ng-if="merchant.logo"/>
             <span ng-if="!merchant.logo">{{ merchant.name }}</span>
         </h1>
+
+        <div id="track_order" class="pure-g" >
+            <form name="TrackForm" class="pure-form">
+                <label for="order_id">Order ID</label>
+                <input id="order_id" type="text" name="code" ng-model="code" class="pure-input-rounded" placeholder="Order Id/KyashCode" required>
+                <button type="submit" class="pure-button" ng-click="track_order()" ng-disabled="TrackForm.$invalid">Details</button>
+                <!--input type="submit" class="pure-button" value="Details"-->
+            </form>
+        </div>
     </div>
+
 </header>
 
 <nav class="navdrawer-container promote-layer ng-cloak" ng-cloak>
@@ -64,7 +74,7 @@
     <div id="products_list" class="pure-g" ng-controller="CtgCtrl" ng-show="active.view=='list'">
         <div class="product pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4 pure-u-xl-1-4" ng-repeat="product in productList">
             <div class="thumbnail">
-                <div ng-click="showProduct(product)" hoverlift>
+                <div ng-click="showProduct(product, attributes)" hoverlift>
                     <paper-shadow z="0" animated="true"></paper-shadow>
                     <div class="image_detail">
                         <!--<img ng-src="{{ product.photo[0][2] }}" scalable/>-->
@@ -126,6 +136,27 @@
                         <div id="product_short_code" class="product_property">
                             <div class="property_caption">PRODUCT CODE</div>
                             #{{product.short_code}}
+                        </div>
+                        <div id="other_attributes" class="product_property">
+                            <div ng-repeat="attr in attributes">
+                                <div class="property_caption">{{attr.attr_var}}</div>
+                                <div ng-switch="attr.attr_var">
+                                    <span ng-switch-when="color">{{product[attr.attr_var].colortext}}</span>
+                                    <span ng-switch-when="price">{{product[attr.attr_var].price}}</span>
+                                    <span ng-switch-default>{{product[attr.attr_var]}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="product_variants">
+                            <div ng-repeat="v in variants">
+                                <div ng-repeat="attr in attributes">
+                                    <div ng-switch="attr.attr_var">
+                                        <span ng-switch-when="color">{{v[attr.attr_var].colortext}}</span>
+                                        <span ng-switch-when="price">{{v[attr.attr_var].price}}</span>
+                                        <span ng-switch-default>{{v[attr.attr_var]}}</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -208,6 +239,20 @@
             </div>
         </div>
     </div>
+
+    <div id="track_order" class="pure-g" ng-controller="TrackCtrl" ng-show="active.view=='odetails'">
+        <p>{{odetails}}</p>
+        <!--form name="myForm">
+          <div class="control-group" ng-class="{error: myForm.name.$invalid && !myForm.name.$pristine}">
+            <label>Order ID</label>
+            <input type="text" name="name" ng-model="project.name" required>
+            <span ng-show="myForm.name.$error.required && !myForm.name.$pristine" class="help-inline">
+                Required {{myForm.name.$pristine}}</span>
+          </div>
+          <button ng-click="track_order()" ng-disabled="myForm.$invalid"
+                  class="btn btn-primary">Details</button>
+        </form-->
+    </div>
 </main>
 
 <footer class="main-footer">
@@ -233,6 +278,7 @@
                     <div>${c.org.registered_address.street}</div>
                     <div>${c.org.registered_address.city} - ${c.org.registered_address.pincode}</div>
                     <div>+91 ${c.org.registered_address.phone}</div>
+                    <div>${c.merchant.contact_us_email}</div>
                 </div>
             </div>
         </div>
@@ -262,7 +308,7 @@
             isFBStore: ${'true' if c.is_fb_store else 'false'},
             cartItemCount: ${c.cart_item_count},
             cartId: '${c.cart_order.key.id() if c.cart_order else ""}',
-            policy: ${c.merchant.sales_policy}
+            policy: ${c.sales_policy_str}
         };
         return {
             $get: function () {
