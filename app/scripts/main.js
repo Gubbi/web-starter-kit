@@ -55,6 +55,8 @@
 
 //App JS starts here.
 var app = angular.module('shop', ['ngRoute']);
+var variants_list = [];
+var attributes;
 
 app.directive('scalable', function() {
     'use strict';
@@ -193,12 +195,37 @@ app.controller('CtgCtrl', function ($scope, $rootScope, Requests) {
 app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
     'use strict';
 
+//    var variants_list = [];
     $scope.$on('productSet', function(event, args) {
-        $scope.product = args.product;
-        $scope.attributes = args.attributes;
+        var product = $scope.product = args.product;
+        attributes = $scope.attributes = args.attributes;
+
+        //TODO Default variant must be added
         Requests.get('/product_variants', {'prod_id': args.product.id}, function(data){
-            $scope.variants = data.variants;
+            $scope.variants = variants_list = data.variants;
+            if(data.variants) {
+                var attributes_shown = {};
+                variants_list.forEach(function(variant) {
+                    for(var key in variant) {
+                        if (variant.hasOwnProperty(key)) {
+                            console.log(key in attributes_shown);
+                            if (!(key in attributes_shown)) {
+                                attributes_shown[key] = {};
+                                console.log(attributes_shown[key], variant[key]);
+                            }
+                            attributes_shown[key][variant[key]] = true;
+                        }
+                    }
+                    console.log(Object.keys(attributes_shown))
+                });
+                console.log(attributes_shown);
+            }
         });
+
+        var selected_var = null;
+
+        var available_options = {};
+
         /*jshint camelcase: false */
         $scope.isPurchasable = args.product.units_available > 0 && args.product.unit_price > 0;
         $scope.active.view = 'product';
@@ -230,6 +257,34 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
             $scope.active.loading = false;
         });
     };
+
+//    available_options = {
+//        varient_attribute1: {option1, option2, option3, ...},
+//        varient_attribute2: {option1, option2, ...},
+//    }
+//
+    var active_filters = {
+//        varient_attrbute1: option2,
+//        varient_attribute2: option5,
+    }
+
+    function filter(varient){
+    //For all keys in active_filter, check if corresponding key in the varient has the same value. If yes return true, else return false.
+    }
+
+    function set_status_and_varient() {
+        var shortlist = varients_list.filter(filter);
+        // add 'selectable' class to all the options in the shortlist varients list.
+
+        // add 'active' class to the options in the first varient of the shortlist
+
+        var selected_varient = shortlist[0];
+        // prices will be automatically updated by angularjs data binding.
+    }
+
+    $scope.vattr_click = function() {
+        set_status_and_varient();
+    }
 });
 
 app.controller('TrackCtrl', function ($scope, $rootScope, Requests) {
