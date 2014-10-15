@@ -130,14 +130,14 @@
                 <div id="product_features" class="pure-u-1 pure-u-lg-2-5 pure-u-xl-1-2">
                     <div>
                         <div id="stock_status">
-                            <span ng-if="product.units_available > 0">In Stock</span>
-                            <span ng-if="product.units_available <= 0">Out Of Stock</span>
+                            <span ng-if="selectedVariant.units_available > 0">In Stock</span>
+                            <span ng-if="selectedVariant.units_available <= 0">Out Of Stock</span>
                         </div>
                         <div id="product_short_code" class="product_property">
                             <div class="property_caption">PRODUCT CODE</div>
                             #{{product.short_code}}
                         </div>
-                        <div id="other_attributes" class="product_property">
+                        <!--div id="other_attributes" class="product_property">
                             <div ng-repeat="attr in attributes">
                                 <div class="property_caption">{{attr.attr_var}}</div>
                                 <div ng-switch="attr.attr_var">
@@ -146,14 +146,13 @@
                                     <span ng-switch-default>{{product[attr.attr_var]}}</span>
                                 </div>
                             </div>
-                        </div>
-                        <div id="product_variants">
-                            <div ng-repeat="v in variants">
-                                <div ng-repeat="attr in attributes">
-                                    <div ng-switch="attr.attr_var">
-                                        <span ng-switch-when="color">{{v[attr.attr_var].colortext}}</span>
-                                        <span ng-switch-when="price">{{v[attr.attr_var].price}}</span>
-                                        <span ng-switch-default>{{v[attr.attr_var]}}</span>
+                        </div-->
+                        <div id="product_variants" class="product_property">
+                            <div ng-repeat="(k, v) in get_variants(full_attributes)" ng-cloak>
+                                <div class="property_caption">{{k}}</div>
+                                <div ng-repeat="(key, data) in v" style="display: inline">
+                                    <div ng-if="data.clickable == true" ng-class="{filtered: data.filtered, active: data.active, selectable: data.selectable}">
+                                        <div class="variant-selectable" ng-click="vattr_click(k, key)">{{key}}</div>
                                     </div>
                                 </div>
                             </div>
@@ -164,8 +163,8 @@
                 <div id="product_buy" class="pure-u-1 pure-u-lg-3-5 pure-u-xl-1-2">
                     <div ng-if="isPurchasable">
                         <div id="price">
-                            <div id="selling_price"><i class="icon icon-inr"></i><span>{{product.unit_price}}</span></div>
-                            <div id="list_price" ng-if="product.mrp && product.mrp != product.unit_price">
+                            <div id="selling_price"><i class="icon icon-inr"></i><span>{{selectedVariant.unit_price}}</span></div>
+                            <div id="list_price" ng-if="product.mrp && product.mrp != selectedVariant.unit_price">
                                 <div class="property_caption">MRP</div>
                                 <strike style="white-space: nowrap;"><i class="icon icon-inr"></i> {{product.mrp}}</strike>
                             </div>

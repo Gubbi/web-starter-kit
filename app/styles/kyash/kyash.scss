@@ -425,3 +425,17 @@ paper-fab {
   white-space: nowrap;
   width: 200px;
 }
+
+/* Product Variant */
+
+.variant-selectable {
+  border: 1px solid;
+  padding: 4px;
+  cursor: pointer;
+  border-color: rgba(0, 0, 0, 0.26);
+}
+
+
+.variant-active {
+
+}

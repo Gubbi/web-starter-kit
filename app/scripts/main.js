@@ -55,7 +55,7 @@
 
 //App JS starts here.
 var app = angular.module('shop', ['ngRoute']);
-var variants_list = [];
+var variantsList = [];
 var attributes;
 
 app.directive('scalable', function() {
@@ -195,36 +195,61 @@ app.controller('CtgCtrl', function ($scope, $rootScope, Requests) {
 app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
     'use strict';
 
-//    var variants_list = [];
     $scope.$on('productSet', function(event, args) {
         var product = $scope.product = args.product;
-        attributes = $scope.attributes = args.attributes;
+        var attributes = $scope.attributes = args.attributes;
 
-        //TODO Default variant must be added
         Requests.get('/product_variants', {'prod_id': args.product.id}, function(data){
-            $scope.variants = variants_list = data.variants;
+            variantsList = data.variants;
+
+            console.log(product);
             if(data.variants) {
-                var attributes_shown = {};
-                variants_list.forEach(function(variant) {
+                var attributesShown = {};
+                var defaultVariant = {};
+
+                for (var attr in attributes) {
+                    if(attributes.hasOwnProperty(attr)) {
+                        defaultVariant[attributes[attr].attr_var] = product[attributes[attr].attr_var];
+                    }
+                }
+
+                defaultVariant['unit_price'] = product['unit_price'];
+                defaultVariant['units_available'] = product['units_available'];
+                console.log('Default Variant', defaultVariant);
+
+                variantsList.push(defaultVariant);
+
+                variantsList.forEach(function(variant) {
+                    var variantName;
                     for(var key in variant) {
                         if (variant.hasOwnProperty(key)) {
-                            console.log(key in attributes_shown);
-                            if (!(key in attributes_shown)) {
-                                attributes_shown[key] = {};
-                                console.log(attributes_shown[key], variant[key]);
+                            if (!(key in attributesShown)) {
+                                attributesShown[key] = {};
                             }
-                            attributes_shown[key][variant[key]] = true;
+                            if(key == 'color') { variantName = variant[key]['colortext']}
+                            else if(key == 'price') {variantName = variant[key]['price']}
+                            else variantName = variant[key];
+                            attributesShown[key][variantName] = {'clickable': true};
                         }
                     }
-                    console.log(Object.keys(attributes_shown))
                 });
-                console.log(attributes_shown);
+
+                $scope.get_variants = function(items) {
+                    var result = {};
+                    angular.forEach(items, function(value, key) {
+                        if (key != 'units_available' && key != 'unit_price') {
+                            result[key] = value;
+                        }
+                    });
+                    return result;
+                };
+                $scope.full_attributes = attributesShown;
+                $scope.variants = variantsList;
             }
+            setStatusAndVariant();
         });
 
         var selected_var = null;
-
-        var available_options = {};
 
         /*jshint camelcase: false */
         $scope.isPurchasable = args.product.units_available > 0 && args.product.unit_price > 0;
@@ -258,33 +283,45 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
         });
     };
 
-//    available_options = {
-//        varient_attribute1: {option1, option2, option3, ...},
-//        varient_attribute2: {option1, option2, ...},
-//    }
-//
-    var active_filters = {
-//        varient_attrbute1: option2,
-//        varient_attribute2: option5,
+    var activeFilters = {};
+
+    function filter(variant){
+    //For all keys in active_filter, check if corresponding key in the variant has the same value. If yes return true, else return false.
+        console.log('Variant', variant);
+        console.log('Filters', activeFilters);
+
+        for (var key in activeFilters) {
+            if(key == 'color') {
+                if(variant.color.colortext != activeFilters[key]) {
+                    console.log("Color", variant.color.colortext);
+                    return false;
+                }
+            }
+            else
+                if(variant[key] != activeFilters[key]) {
+                    return false;
+                }
+        }
+        return true;
     }
 
-    function filter(varient){
-    //For all keys in active_filter, check if corresponding key in the varient has the same value. If yes return true, else return false.
-    }
+    function setStatusAndVariant() {
+        var shortlist = variantsList.filter(filter);
+        console.log('Shortlisted', shortlist);
+        // add 'selectable' class to all the options in the shortlist variants list.
 
-    function set_status_and_varient() {
-        var shortlist = varients_list.filter(filter);
-        // add 'selectable' class to all the options in the shortlist varients list.
+        // add 'active' class to the options in the first variant of the shortlist
 
-        // add 'active' class to the options in the first varient of the shortlist
-
-        var selected_varient = shortlist[0];
+        $scope.selectedVariant = shortlist[0];
         // prices will be automatically updated by angularjs data binding.
     }
 
-    $scope.vattr_click = function() {
-        set_status_and_varient();
-    }
+    $scope.vattr_click = function(variantAttr, option) {
+        activeFilters[variantAttr] = option;
+        setStatusAndVariant();
+
+        console.log(activeFilters)
+    };
 });
 
 app.controller('TrackCtrl', function ($scope, $rootScope, Requests) {
