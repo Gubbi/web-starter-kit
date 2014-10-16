@@ -257,6 +257,7 @@ paper-fab {
 
   .property_caption {
     @extend .text-caption;
+    margin-top: 10px;
     color: $black26;
     text-transform: uppercase;
   }
@@ -381,6 +382,31 @@ paper-fab {
   #product_right_pane {
     padding-left: 4em;
   }
+
+  /* Product Variant */
+
+  .selectable {
+    display: inline;
+    border: 1px solid;
+    padding: 6px 20px;
+    margin: 0 5px 0 0;
+    cursor: pointer;
+    border-color: rgba(0, 0, 0, 0.26);
+  }
+
+  .active {
+    @extend .selectable;
+    cursor: default;
+    border: 2px slateblue solid;
+  }
+
+  .filtered {
+    @extend .selectable;
+    cursor: default;
+    border: 1px coral double;
+  }
+
+
 }
 
 @media all and (max-width: 568px) {
@@ -424,18 +450,4 @@ paper-fab {
   text-align: center;
   white-space: nowrap;
   width: 200px;
-}
-
-/* Product Variant */
-
-.variant-selectable {
-  border: 1px solid;
-  padding: 4px;
-  cursor: pointer;
-  border-color: rgba(0, 0, 0, 0.26);
-}
-
-
-.variant-active {
-
 }

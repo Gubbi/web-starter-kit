@@ -74,7 +74,7 @@
     <div id="products_list" class="pure-g" ng-controller="CtgCtrl" ng-show="active.view=='list'">
         <div class="product pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4 pure-u-xl-1-4" ng-repeat="product in productList">
             <div class="thumbnail">
-                <div ng-click="showProduct(product, attributes)" hoverlift>
+                <div ng-click="showProduct(product)" hoverlift>
                     <paper-shadow z="0" animated="true"></paper-shadow>
                     <div class="image_detail">
                         <!--<img ng-src="{{ product.photo[0][2] }}" scalable/>-->
@@ -137,22 +137,12 @@
                             <div class="property_caption">PRODUCT CODE</div>
                             #{{product.short_code}}
                         </div>
-                        <!--div id="other_attributes" class="product_property">
-                            <div ng-repeat="attr in attributes">
-                                <div class="property_caption">{{attr.attr_var}}</div>
-                                <div ng-switch="attr.attr_var">
-                                    <span ng-switch-when="color">{{product[attr.attr_var].colortext}}</span>
-                                    <span ng-switch-when="price">{{product[attr.attr_var].price}}</span>
-                                    <span ng-switch-default>{{product[attr.attr_var]}}</span>
-                                </div>
-                            </div>
-                        </div-->
-                        <div id="product_variants" class="product_property">
-                            <div ng-repeat="(k, v) in get_variants(full_attributes)" ng-cloak>
+                        <div id="other_attributes" class="product_property">
+                            <div ng-repeat="(k, v) in full_attributes" ng-cloak>
                                 <div class="property_caption">{{k}}</div>
                                 <div ng-repeat="(key, data) in v" style="display: inline">
-                                    <div ng-if="data.clickable == true" ng-class="{filtered: data.filtered, active: data.active, selectable: data.selectable}">
-                                        <div class="variant-selectable" ng-click="vattr_click(k, key)">{{key}}</div>
+                                    <div ng-if="data.selectable" ng-class="{filtered: data.filtered, active: data.active, selectable: data.selectable}">
+                                        <div ng-click="filterToggle(k, key)" style="display: inline">{{key}}</div>
                                     </div>
                                 </div>
                             </div>
