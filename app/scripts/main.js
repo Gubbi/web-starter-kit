@@ -272,11 +272,12 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
 
     function filter(variant) {
         var matches = true;
+        console.log("activeFilters", activeFilters);
 
         Object.keys(activeFilters).every( function(key) {
-            if (hash(variant[key]) !== activeFilters[key]) { matches = false; return false; }
+            if (hash(variant[key]) !== activeFilters[key]) { matches = false;  return false;}
+            console.log(hash(variant[key]), activeFilters[key], matches);
         });
-
         return matches;
     }
 
@@ -313,6 +314,7 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
         }
 
         $scope.selectedVariant = shortlist[0];
+        console.log('Selected Variant', $scope.selectedVariant);
     }
 
 

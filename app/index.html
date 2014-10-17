@@ -141,8 +141,8 @@
                             <div ng-repeat="(k, v) in full_attributes" ng-cloak>
                                 <div class="property_caption">{{k}}</div>
                                 <div ng-repeat="(key, data) in v" style="display: inline-block">
-                                    <div ng-class="{filtered: data.filtered, active: data.active, selectable: data.selectable}">
-                                        <div class="default-option" ng-click="filterToggle(k, key)" style="display: inline-block">{{data.caption}}</div>
+                                    <div class="default-option" ng-class="{filtered: data.filtered, active: data.active, selectable: data.selectable}">
+                                        <div class="caption" ng-click="filterToggle(k, key)">{{data.caption}}</div>
                                     </div>
                                 </div>
                             </div>
