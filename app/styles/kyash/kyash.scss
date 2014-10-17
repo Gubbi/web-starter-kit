@@ -384,25 +384,28 @@ paper-fab {
   }
 
   /* Product Variant */
-
-  .selectable {
+  .default-option {
     display: inline;
-    border: 1px solid;
     padding: 6px 20px;
     margin: 0 5px 0 0;
+    background-color: $gray100;
+  }
+
+  .selectable {
     cursor: pointer;
-    border-color: rgba(0, 0, 0, 0.26);
+    margin: 0 5px 0 0;
+    border: 1px lightgray solid;
   }
 
   .active {
-    @extend .selectable;
     cursor: default;
+    margin: 0 5px 0 0;
     border: 2px slateblue solid;
   }
 
   .filtered {
-    @extend .selectable;
     cursor: default;
+    margin: 0 5px 0 0;
     border: 1px coral double;
   }
 
