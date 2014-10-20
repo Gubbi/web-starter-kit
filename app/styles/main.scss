@@ -282,7 +282,7 @@ main {
             transform: translate(0, 0);
     -webkit-transition: none;
             transition: none;
-    overflow-y: auto;
+    overflow-y: visible;
   }
 
   .navdrawer-container h4 {
@@ -307,6 +307,26 @@ main {
 
   .navdrawer-container ul li.active a {
     border-bottom: 2px solid $accentDark;
+  }
+
+  .navdrawer-container ul li ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display:none;
+  }
+
+  .navdrawer-container ul li:hover ul {
+    z-index: 2;
+    top: 39px;
+    bottom: 0;
+    position: absolute;
+    display: inline-block;
+    width: 200px;
+  }
+
+  .navdrawer-container ul li ul li {
+    background-color: $primary;
   }
 
   main {

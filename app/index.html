@@ -27,6 +27,9 @@
     <!-- Polymer Polyfill -->
     <script src="bower_components/platform/platform.js"></script>
     <link rel="import" href="bower_components/paper-button/paper-button.html">
+
+    <!--YUI for Pure CSS-->
+    <script src="http://yui.yahooapis.com/3.18.0/build/yui/yui-min.js"></script>
 </head>
 
 <body ng-app="shop" ng-controller="HomeCtrl" ng-class="{fb_store: isFBStore, work_in_progress: active.loading}" class="work_in_progress">
@@ -54,12 +57,21 @@
 
 </header>
 
-<nav class="navdrawer-container promote-layer ng-cloak" ng-cloak>
+<nav class="navdrawer-container ng-cloak" ng-cloak>
+<!--div class="navdrawer-container ng-cloak pure-menu pure-menu-open pure-menu-horizontal" ng-cloak-->
     <h4>Navigation</h4>
-    <ul>
+    <ul id="std-menu-items">
         <li ng-class="{active: active.category == 'Featured'}" class="active"><a href="#" ng-click="categoryList('Featured')">FEATURED</a></li>
         <li ng-repeat="cat in categories | filter:'!Featured'" ng-class="{active: active.category == cat}">
             <a href="#" ng-click="categoryList(cat)">{{cat | uppercase}}</a>
+        </li>
+        <li ng-if="moreCategories.length > 0">
+            <a href="#">More<i class="icon icon-arrow-down"></i></a>
+            <ul>
+                <li ng-repeat="mcat in moreCategories" ng-class="{active: active.category == mcat}">
+                    <a href="#" ng-click="categoryList(mcat)">{{mcat | uppercase}}</a>
+                </li>
+            </ul>
         </li>
         <li id="cart_menu_icon">
             <div>
@@ -68,6 +80,7 @@
             </div>
         </li>
     </ul>
+<!--/div-->
 </nav>
 
 <main class="ng-cloak" ng-cloak>
@@ -229,18 +242,9 @@
         </div>
     </div>
 
-    <div id="track_order" class="pure-g" ng-controller="TrackCtrl" ng-show="active.view=='odetails'">
+    <div id="trackOrder" class="pure-g" ng-controller="TrackCtrl" ng-show="active.view=='odetails'">
         <p>{{odetails}}</p>
-        <!--form name="myForm">
-          <div class="control-group" ng-class="{error: myForm.name.$invalid && !myForm.name.$pristine}">
-            <label>Order ID</label>
-            <input type="text" name="name" ng-model="project.name" required>
-            <span ng-show="myForm.name.$error.required && !myForm.name.$pristine" class="help-inline">
-                Required {{myForm.name.$pristine}}</span>
-          </div>
-          <button ng-click="track_order()" ng-disabled="myForm.$invalid"
-                  class="btn btn-primary">Details</button>
-        </form-->
+
     </div>
 </main>
 
@@ -329,6 +333,24 @@
             }(document, 'script', 'facebook-jssdk'));
         }
     });
+
+##    YUI({
+##    classNamePrefix: 'pure'
+##    }).use('gallery-sm-menu', function (Y) {
+##
+##        var horizontalMenu = new Y.Menu({
+##            container         : '.navdrawer-container',
+##            sourceNode        : '#std-menu-items',
+##            orientation       : 'horizontal',
+##            hideOnOutsideClick: false,
+##            hideOnClick       : false
+##        });
+##
+##        horizontalMenu.render();
+##        horizontalMenu.show();
+##
+##    });
+
 </script>
 <!-- Built with love using Web Starter Kit -->
 </body>

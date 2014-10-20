@@ -24,6 +24,7 @@
 
   var querySelector = document.querySelector.bind(document);
 
+  //var navdrawerContainer = querySelector('.pure-menu');
   var navdrawerContainer = querySelector('.navdrawer-container');
   var body = document.body;
   var appbarElement = querySelector('.app-bar');
@@ -111,13 +112,17 @@ app.service('Requests', function($http) {
 app.controller('HomeCtrl', function ($scope, $rootScope, Requests) {
     'use strict';
     $scope.categories = [];
+    $scope.moreCategories = [];
     $scope.active = {category: null, view: 'list', loading: false};
 
     Requests.get('/general_details', {merchant: $rootScope.merchant.id}, function(response) {
         $scope.merchant = response;
         $scope.attributes = response.attributes;
         angular.forEach(response.categories, function(value, key) {
-          this.push(value[0]);
+          if($scope.categories.length < 5)
+            this.push(value[0]);
+          else
+            $scope.moreCategories.push(value[0]);
         }, $scope.categories);
     });
 
@@ -125,12 +130,8 @@ app.controller('HomeCtrl', function ($scope, $rootScope, Requests) {
         $rootScope.$broadcast('categorySet', {category: cat});
     };
 
-    $scope.track_order = function() {
+    $scope.trackOrder = function() {
         window.location = '/'+$scope.code;
-//        Requests.get('/' + $scope.code,{}, function(response) {
-//            console.log(response);
-//            $rootScope.$broadcast('trackSet', {ord_details: response});
-//        });
     };
 
     $scope.goToCart = function() {
