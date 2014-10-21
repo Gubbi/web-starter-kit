@@ -28,8 +28,6 @@
     <script src="bower_components/platform/platform.js"></script>
     <link rel="import" href="bower_components/paper-button/paper-button.html">
 
-    <!--YUI for Pure CSS-->
-    <script src="http://yui.yahooapis.com/3.18.0/build/yui/yui-min.js"></script>
 </head>
 
 <body ng-app="shop" ng-controller="HomeCtrl" ng-class="{fb_store: isFBStore, work_in_progress: active.loading}" class="work_in_progress">
@@ -49,7 +47,7 @@
             <form name="TrackForm" class="pure-form">
                 <label for="order_id">Order ID</label>
                 <input id="order_id" type="text" name="code" ng-model="code" class="pure-input-rounded" placeholder="Order Id/KyashCode" required>
-                <button type="submit" class="pure-button" ng-click="track_order()" ng-disabled="TrackForm.$invalid">Details</button>
+                <button type="submit" class="pure-button" ng-click="trackOrder()" ng-disabled="TrackForm.$invalid">Details</button>
                 <!--input type="submit" class="pure-button" value="Details"-->
             </form>
         </div>
@@ -124,7 +122,7 @@
             <div id="product_left_pane" class="pure-g">
                 <div id="product_image" class="pure-u-1">
                     <!--<img ng-src="{{ product.photo[0][1] }}" ng-if="product.photo[0]">-->
-                    <img ng-src="https://unsplash.it/600/1000/?random" ng-if="product.photo[0]">
+                    <img ng-src="https://unsplash.it/600/1000/?random">
                 </div>
 
                 <div class="other_nav pure-u-1">
@@ -149,13 +147,17 @@
                         <div id="product_short_code" class="product_property">
                             <div class="property_caption">PRODUCT CODE</div>
                             #{{product.short_code}}
+                            {{colorReg}}
                         </div>
                         <div id="other_attributes" class="product_property">
-                            <div ng-repeat="(k, v) in full_attributes" ng-cloak>
+                            <div ng-repeat="(k, v) in fullAttributes" ng-cloak>
                                 <div class="property_caption">{{k}}</div>
                                 <div ng-repeat="(key, data) in v" style="display: inline-block">
                                     <div class="default-option" ng-class="{filtered: data.filtered, active: data.active, selectable: data.selectable}">
-                                        <div class="caption" ng-click="filterToggle(k, key)">{{data.caption}}</div>
+                                        <div class="caption" ng-click="filterToggle(k, key)" ng-switch="checkColorRegEx(data.caption)">
+                                            <span ng-switch-when="true" ng-style="{'background': data.caption, 'padding': '2px 10px', 'margin': '-5px'}"></span>
+                                            <span ng-switch-default>{{data.caption}}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -333,24 +335,6 @@
             }(document, 'script', 'facebook-jssdk'));
         }
     });
-
-##    YUI({
-##    classNamePrefix: 'pure'
-##    }).use('gallery-sm-menu', function (Y) {
-##
-##        var horizontalMenu = new Y.Menu({
-##            container         : '.navdrawer-container',
-##            sourceNode        : '#std-menu-items',
-##            orientation       : 'horizontal',
-##            hideOnOutsideClick: false,
-##            hideOnClick       : false
-##        });
-##
-##        horizontalMenu.render();
-##        horizontalMenu.show();
-##
-##    });
-
 </script>
 <!-- Built with love using Web Starter Kit -->
 </body>

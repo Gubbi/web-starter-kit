@@ -386,10 +386,11 @@ paper-fab {
   /* Product Variant */
   .caption {
     display: inline-block;
-    padding: 6px 20px;
+    padding: 4px 14px;
   }
+
   .default-option {
-    margin: 0 5px 0 0;
+    margin: 0 5px 5px 0;
     border: 1px lightgray dotted;
   }
 
@@ -399,13 +400,11 @@ paper-fab {
   }
 
   .active {
-    cursor: default;
     border: 1px slateblue solid;
   }
 
   .filtered {
-    cursor: default;
-    border: 1px coral double;
+    background: url("/images/diagonal-noise.png");
   }
 
 

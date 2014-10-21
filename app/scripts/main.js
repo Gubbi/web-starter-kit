@@ -198,13 +198,17 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
         return JSON.stringify(obj);
     }
 
-    $scope.full_attributes = {};
+    $scope.activeFilters = {};
+    $scope.checkColorRegEx = function(value) {
+        var regexp = /^#([0-9a-f]{3}){1,2}$/i;
+        return value.match(regexp) != null;
+    };
 
     $scope.$on('productSet', function(event, args) {
         var product = $scope.product = args.product;
         var variantsList = $scope.variantsList = [];
         var attributes = [].concat($scope.attributes, 'unit_price', 'units_available');
-        $scope.selectedVariant = null;
+        $scope.fullAttributes = $scope.selectedVariant = {};
 
         Requests.get('/product_variants', {id: args.product.id}, function(data) {
             if(data.variants) {
@@ -222,14 +226,14 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
                     Object.keys(variant).forEach(function(key) {
                         if (key === 'units_available' || key === 'unit_price') return;
 
-                        if (!(key in $scope.full_attributes)) {
-                            $scope.full_attributes[key] = {};
+                        if (!(key in $scope.fullAttributes)) {
+                            $scope.fullAttributes[key] = {};
                         }
 
-                        if(typeof variant[key] === 'object') variantName = variant[key]['colortext'] || variant[key]['price'];
+                        if(typeof variant[key] === 'object') variantName = variant[key]['colorhex'] || variant[key]['price'];
                         else variantName = variant[key];
 
-                        $scope.full_attributes[key][hash(variant[key])] = {caption: variantName, active: false, selectable: true, filtered: false};
+                        $scope.fullAttributes[key][hash(variant[key])] = {caption: variantName, active: false, selectable: true, filtered: false};
                     });
                 });
 
@@ -269,27 +273,23 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
         });
     };
 
-    var activeFilters = {};
-
     function filter(variant) {
         var matches = true;
-        console.log("activeFilters", activeFilters);
 
-        Object.keys(activeFilters).every( function(key) {
-            if (hash(variant[key]) !== activeFilters[key]) { matches = false;  return false;}
-            console.log(hash(variant[key]), activeFilters[key], matches);
+        Object.keys($scope.activeFilters).every( function(key) {
+            if (hash(variant[key]) !== $scope.activeFilters[key]) { matches = false;  return false;}
         });
         return matches;
     }
 
     function setData(attributeName, option, data) {
         if(attributeName) {
-            angular.extend($scope.full_attributes[attributeName][option], data);
+            angular.extend($scope.fullAttributes[attributeName][option], data);
         }
         else {
-            Object.keys($scope.full_attributes).forEach( function(name) {
-                Object.keys($scope.full_attributes[name]).forEach( function(value) {
-                    angular.extend($scope.full_attributes[name][value], data);
+            Object.keys($scope.fullAttributes).forEach( function(name) {
+                Object.keys($scope.fullAttributes[name]).forEach( function(value) {
+                    angular.extend($scope.fullAttributes[name][value], data);
                 });
             });
         }
@@ -297,8 +297,6 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
 
     function setStatusAndVariant() {
         var shortlist = $scope.variantsList.filter(filter);
-        console.log('Active Filters', activeFilters);
-        console.log('Shortlisted', shortlist);
 
         // Reset classes for all options.
         setData(null, null, {active: false, selectable: false});
@@ -315,24 +313,32 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
         }
 
         $scope.selectedVariant = shortlist[0];
-        console.log('Selected Variant', $scope.selectedVariant);
     }
 
-
+    //var activeFilters = $scope.activeFilters = {};
     $scope.filterToggle = function(variantAttr, option) {
-        if(activeFilters[variantAttr] === option) {
-            delete activeFilters[variantAttr];
-            setData(variantAttr, option, {filtered: false});
+        console.log($scope.activeFilters);
+        if($scope.fullAttributes[variantAttr][option]['selectable']) {
+            if ($scope.activeFilters[variantAttr] === option) {
+                delete $scope.activeFilters[variantAttr];
+                setData(variantAttr, option, {filtered: false});
+            }
+            else {
+                if (variantAttr in $scope.activeFilters) {
+                    setData(variantAttr, $scope.activeFilters[variantAttr], {filtered: false});
+                }
+                $scope.activeFilters[variantAttr] = option;
+                setData(variantAttr, option, {filtered: true});
+            }
         }
         else {
-            if (variantAttr in activeFilters) {
-                setData(variantAttr, activeFilters[variantAttr], {filtered: false});
-            }
-
-            activeFilters[variantAttr] = option;
+            Object.keys($scope.activeFilters).forEach(function(key) {
+                setData(key, $scope.activeFilters[key], {filtered: false});
+                delete $scope.activeFilters[key];
+            });
+            $scope.activeFilters[variantAttr] = option;
             setData(variantAttr, option, {filtered: true});
         }
-
         setStatusAndVariant();
     };
 });
