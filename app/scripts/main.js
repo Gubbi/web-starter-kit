@@ -258,6 +258,12 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
         return policy.has_cod && policy.min_amount_cod <= product.unit_price && policy.max_amount_cod >= product.unit_price;
     };
 
+    $scope.imageUrl = 'https://unsplash.it/600/800/?image=1';
+    $scope.productImages = ['https://unsplash.it/600/800?image=1', 'https://unsplash.it/600/800?image=2', 'https://unsplash.it/600/800?image=3'];
+    $scope.viewImage = function(url) {
+        $scope.imageUrl = url;
+    };
+
     $scope.addCart = function() {
         $scope.active.loading = true;
         Requests.post('/cart/', {
@@ -315,9 +321,7 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
         $scope.selectedVariant = shortlist[0];
     }
 
-    //var activeFilters = $scope.activeFilters = {};
     $scope.filterToggle = function(variantAttr, option) {
-        console.log($scope.activeFilters);
         if($scope.fullAttributes[variantAttr][option]['selectable']) {
             if ($scope.activeFilters[variantAttr] === option) {
                 delete $scope.activeFilters[variantAttr];
