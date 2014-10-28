@@ -44,8 +44,8 @@
         </h1>
 
         <div id="track_order">
-            <paper-input id="idOrKyashcode" label="KyashCode" ng-model="code"></paper-input>
-            <paper-button id="orderDetailsButton" label="Track" ng-click="trackOrder()"></paper-button>
+            <paper-input id="idOrKyashcode" label="KyashCode"></paper-input>
+            <paper-button id="orderDetailsButton" label="Track" ></paper-button>
         </div>
     </div>
 </header>
@@ -338,6 +338,14 @@
             }(document, 'script', 'facebook-jssdk'));
         }
     });
+
+    var input = document.querySelector('#idOrKyashcode');
+    var trkBtn = document.querySelector('#orderDetailsButton');
+
+    trkBtn.addEventListener('click', function() {
+        window.location = '/'+input.inputValue;
+    })
+
 </script>
 <!-- Built with love using Web Starter Kit -->
 </body>

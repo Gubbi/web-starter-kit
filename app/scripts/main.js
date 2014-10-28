@@ -131,10 +131,6 @@ app.controller('HomeCtrl', function ($scope, $rootScope, Requests) {
         $rootScope.$broadcast('categorySet', {category: cat});
     };
 
-    $scope.trackOrder = function() {
-        window.location = '/'+$scope.code;
-    };
-
     $scope.goToCart = function() {
         var url = 'http://';
         if ($rootScope.merchant.customDomain.trim() !== '') {
