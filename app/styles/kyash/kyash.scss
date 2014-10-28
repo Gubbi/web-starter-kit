@@ -423,8 +423,14 @@ paper-fab {
   }
 
   .default-option {
+    display: inline-block;
     margin: 0 5px 5px 0;
     border: 1px lightgray dotted;
+  }
+
+  .default-color {
+    @extend .default-option;
+    @extend .caption;
   }
 
   .selectable {

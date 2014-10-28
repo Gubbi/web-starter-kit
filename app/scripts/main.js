@@ -55,7 +55,7 @@
 
 
 //App JS starts here.
-var app = angular.module('shop', ['ngRoute']);
+var app = angular.module('shop', ['ngRoute', 'ngSanitize']);
 
 app.directive('scalable', function() {
     'use strict';
@@ -100,6 +100,18 @@ app.filter('charges', function() {
     'use strict';
     return function(input) {
         return input.kind==='percentage'? input.price.toString() + '%' : '₹' + input.price.toString();
+    };
+});
+
+app.filter('attrValue', function($sce) {
+    'use strict';
+    return function(input) {
+        if(typeof input === 'object' && input.colortext)
+            return $sce.trustAsHtml('<div class="default-color"><span style="background:'+input.colorhex+'; padding: 2px 10px; margin: -5px"></span></div>');
+        else if(typeof input === 'object' && input.kind)
+            return input.kind==='percentage'? input.price.toString() + '%' : '₹' + input.price.toString();
+        else
+            return input
     };
 });
 

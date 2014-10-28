@@ -108,7 +108,7 @@
         </div>
     </div>
 
-    <div id="product_board" class="pure-g" ng-controller="PdtCtrl" ng-show="active.view=='product'">
+    <div id="product_board" class="pure-g" ng-controller="PdtCtrl" ng-show="active.view=='product'" ng-cloak>
         <div id="product_title" class="pure-u-1"><span>{{product.name}}</span></div>
 
         <div class="pure-u-1 pure-u-sm-1-2 pure-u-lg-5-12 pure-u-xl-1-3">
@@ -125,6 +125,10 @@
                 </div>
 
                 <div class="other_nav pure-u-1">
+                    <div>
+                        <div>PRODUCT CODE</div>
+                        #{{product.short_code}}
+                    </div>
                     <div>
                         <div>Browse Other Products In:</div>
                         <ul id="category_list">
@@ -143,22 +147,14 @@
                             <span ng-if="selectedVariant.units_available > 0">In Stock</span>
                             <span ng-if="selectedVariant.units_available <= 0">Out Of Stock</span>
                         </div>
-                        <div id="product_short_code" class="product_property">
-                            <div class="property_caption">PRODUCT CODE</div>
-                            #{{product.short_code}}
-                        </div>
                         <div id="attributes" class="product_property">
-                            <div ng-repeat="attr in attributes" ng-cloak>
+                            <div ng-repeat="attr in attributes">
                                 <div class="property_caption">{{attr}}</div>
-                                <div ng-switch="attr">
-                                    <span ng-switch-when="color">{{product[attr]['colortext']}}</span>
-                                    <span ng-switch-when="price">{{product[attr]['price']}}</span>
-                                    <span ng-switch-default>{{product[attr]}}</span>
-                                </div>
+                                <div ng-bind-html="product[attr] | attrValue"></div>
                             </div>
                         </div>
                         <div id="other_attributes" class="product_property">
-                            <div ng-repeat="(k, v) in fullAttributes" ng-cloak>
+                            <div ng-repeat="(k, v) in fullAttributes">
                                 <div class="property_caption">{{k}}</div>
                                 <div ng-repeat="(key, data) in v" style="display: inline-block">
                                     <div class="default-option" ng-class="{filtered: data.filtered, active: data.active, selectable: data.selectable}">
@@ -244,6 +240,11 @@
         </div>
         <div class="other_nav pure-u-1">
             <div>
+                <div>PRODUCT CODE</div>
+                #{{product.short_code}}
+            </div>
+
+            <div>
                 <div>Browse Other Products In:</div>
                 <ul id="category_list">
                     <li ng-repeat="category in product.categories" ng-click="categoryList(category)">{{category}}</li>
@@ -289,6 +290,7 @@
 
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-sanitize.js"></script>
 
 <!-- build:js scripts/main.min.js -->
 <script src="scripts/main.js"></script>
