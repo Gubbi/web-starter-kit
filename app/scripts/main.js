@@ -118,6 +118,7 @@ app.controller('HomeCtrl', function ($scope, $rootScope, Requests) {
     Requests.get('/general_details', {merchant: $rootScope.merchant.id}, function(response) {
         $scope.merchant = response;
         $scope.attributes = response.attributes;
+        $scope.other_attributes = response.other_attributes;
         angular.forEach(response.categories, function(value, key) {
           if($scope.categories.length < 5)
             this.push(value[0]);
@@ -207,14 +208,15 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
     $scope.$on('productSet', function(event, args) {
         var product = $scope.product = args.product;
         var variantsList = $scope.variantsList = [];
-        var attributes = [].concat($scope.attributes, 'unit_price', 'units_available');
+        var other_attributes = [].concat($scope.other_attributes, 'unit_price', 'units_available');
         $scope.fullAttributes = $scope.selectedVariant = {};
+        $scope.imageUrl = product.photo[0];
 
         Requests.get('/product_variants', {id: args.product.id}, function(data) {
             if(data.variants) {
                 var defaultVariant = {};
 
-                attributes.forEach(function(attribute) {
+                other_attributes.forEach(function(attribute) {
                     defaultVariant[attribute] = product[attribute];
                 });
 
@@ -256,12 +258,6 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
         var policy = $rootScope.policy;
         /*jshint camelcase: false */
         return policy.has_cod && policy.min_amount_cod <= product.unit_price && policy.max_amount_cod >= product.unit_price;
-    };
-
-    $scope.imageUrl = 'https://unsplash.it/600/800/?image=1';
-    $scope.productImages = ['https://unsplash.it/600/800?image=1', 'https://unsplash.it/600/800?image=2', 'https://unsplash.it/600/800?image=3'];
-    $scope.viewImage = function(url) {
-        $scope.imageUrl = url;
     };
 
     $scope.addCart = function() {
@@ -345,15 +341,4 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
         }
         setStatusAndVariant();
     };
-});
-
-
-app.controller('TrackCtrl', function ($scope) {
-    'use strict';
-
-    $scope.$on('trackSet', function(event, args) {
-        $scope.odetails = args.ord_details;
-        $scope.active.view = 'odetails';
-        document.body.scrollTop = document.documentElement.scrollTop = 0;
-    });
 });
