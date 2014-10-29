@@ -223,7 +223,7 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
     $scope.$on('productSet', function(event, args) {
         var product = $scope.product = $scope.selectedVariant = args.product;
         var variantsList = $scope.variantsList = [];
-        var otherAttributes = [].concat($scope.otherAttributes, 'unit_price', 'units_available');
+        var otherAttributes = [].concat($scope.otherAttributes, 'unit_price', 'units_available', 'mrp');
         $scope.fullAttributes = {};
         $scope.imageUrl = product.photo[0];
 
@@ -241,7 +241,7 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
                 variantsList.forEach(function(variant) {
                     var variantName;
                     Object.keys(variant).forEach(function(key) {
-                        if (key === 'units_available' || key === 'unit_price') { return; }
+                        if (key === 'units_available' || key === 'unit_price' || key === 'mrp') { return; }
 
                         if (!(key in $scope.fullAttributes)) {
                             $scope.fullAttributes[key] = {};
@@ -323,7 +323,7 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
         // add 'selectable' class to all the options in the shortlist variants list.
         shortlist.forEach( function(element, i, slist) {
             Object.keys(slist[i]).forEach(function (attribute) {
-                if (attribute === 'unit_price' || attribute === 'units_available') {
+                if (attribute === 'unit_price' || attribute === 'units_available' || attribute === 'mrp') {
                     return;
                 }
 

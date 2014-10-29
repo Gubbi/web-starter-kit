@@ -90,7 +90,7 @@
                             <div class="price pure-u-1-2">
                                 <div>
                                     <div class='mrp'>
-                                        <div ng-if="product.mrp && product.mrp != product.unit_price"><strike>&#8377; {{product.mrp}}</strike></div>
+                                        <div ng-if="product.mrp && product.mrp != product.unit_price"><del>&#8377; {{product.mrp}}</del></div>
                                     </div>
                                     <div ng-if="product.unit_price">
                                         <i class="icon icon-inr" style="vertical-align: bottom;"></i> {{product.unit_price}}
@@ -175,7 +175,7 @@
                             <div id="selling_price"><i class="icon icon-inr"></i><span>{{selectedVariant.unit_price}}</span></div>
                             <div id="list_price" ng-if="product.mrp && product.mrp != selectedVariant.unit_price">
                                 <div class="property_caption">MRP</div>
-                                <strike style="white-space: nowrap;"><i class="icon icon-inr"></i> {{product.mrp}}</strike>
+                                <del style="white-space: nowrap;"><i class="icon icon-inr"></i> {{selectedVariant.mrp}}</del>
                             </div>
                         </div>
                         <paper-button id="cart_submit" raisedButton label=" ADD TO CART " class="primary" ng-click="addCart()"></paper-button>
