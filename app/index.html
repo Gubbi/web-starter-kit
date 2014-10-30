@@ -173,7 +173,7 @@
                     <div ng-if="isPurchasable">
                         <div id="price">
                             <div id="selling_price"><i class="icon icon-inr"></i><span>{{selectedVariant.unit_price}}</span></div>
-                            <div id="list_price" ng-if="product.mrp && product.mrp != selectedVariant.unit_price">
+                            <div id="list_price" ng-if="selectedVariant.mrp && selectedVariant.mrp != selectedVariant.unit_price">
                                 <div class="property_caption">MRP</div>
                                 <del style="white-space: nowrap;"><i class="icon icon-inr"></i> {{selectedVariant.mrp}}</del>
                             </div>

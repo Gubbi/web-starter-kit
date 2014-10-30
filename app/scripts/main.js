@@ -215,9 +215,7 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
     $scope.activeFilters = {};
     $scope.checkColorRegEx = function(value) {
         var regexp = /^#([0-9a-f]{3}){1,2}$/i;
-//        if(typeof value !== 'undefined') {
             return value.match(regexp) !== null;
-//        }
     };
 
     $scope.$on('productSet', function(event, args) {
