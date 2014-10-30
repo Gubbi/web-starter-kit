@@ -24,7 +24,6 @@
 
   var querySelector = document.querySelector.bind(document);
 
-  //var navdrawerContainer = querySelector('.pure-menu');
   var navdrawerContainer = querySelector('.navdrawer-container');
   var body = document.body;
   var appbarElement = querySelector('.app-bar');
