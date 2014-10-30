@@ -116,7 +116,7 @@
                 <div id="product_image" class="pure-u-1" ng-if="product.photo[0]">
                     <img ng-src="{{imageUrl}}"/>
                     <!--img src="https://unsplash.it/600/800/?random"-->
-                    <div>
+                    <div ng-if="product.photo.length > 1">
                         <div class="image_detail product_thumbnail" ng-repeat="image in product.photo" ng-click="imageUrl = image[1]">
                             <img ng-src="{{image[2]}}" scalable/>
                             <!--img src="https://unsplash.it/600/800/?random" scalable-->
@@ -127,7 +127,7 @@
                 <div class="other_nav pure-u-1">
                     <div>
                         <div>PRODUCT CODE</div>
-                        #{{product.short_code}}
+                        <span class="product-code">#{{product.short_code}}</span>
                     </div>
                     <div>
                         <div>Browse Other Products In:</div>
@@ -241,7 +241,7 @@
         <div class="other_nav pure-u-1">
             <div>
                 <div>PRODUCT CODE</div>
-                #{{product.short_code}}
+                <span class="product-code">#{{product.short_code}}</span>
             </div>
 
             <div>

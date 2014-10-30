@@ -355,6 +355,11 @@ paper-fab {
       padding-left: 2em;
     }
 
+    .product-code {
+      @extend .text-caption;
+      color: $accent;
+    }
+
     @extend .text-caption2;
     text-transform: uppercase;
 
