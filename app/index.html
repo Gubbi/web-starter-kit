@@ -9,16 +9,16 @@
 
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
-    <link rel="icon" sizes="192x192" href="/images/touch/chrome-touch-icon-192x192.png">
+    <link rel="icon" sizes="192x192" href="images/touch/chrome-touch-icon-192x192.png">
 
     <!-- Add to homescreen for Safari on iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="${c.merchant.name.title()} Online Store">
-    <link rel="apple-touch-icon-precomposed" href="/images/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="images/apple-touch-icon-precomposed.png">
 
     <!-- Tile icon for Win8 (144x144 + tile color) -->
-    <meta name="msapplication-TileImage" content="/images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
     <meta name="msapplication-TileColor" content="#3372DF">
 
     <!-- Page styles -->
@@ -81,8 +81,8 @@
                 <div ng-click="showProduct(product)" hoverlift>
                     <paper-shadow z="0" animated="true"></paper-shadow>
                     <div class="image_detail">
-                        <!--<img ng-src="{{ product.photo[0][2] }}" scalable/>-->
-                        <img ng-src="https://unsplash.it/300/500/?random" scalable/>
+                        <img ng-src="{{ product.photo[0][2] }}" scalable/>
+                        <!--<img ng-src="https://unsplash.it/300/500/?random" scalable/>-->
                     </div>
                     <div class="details">
                         <div class="name">{{product.name}}</div>
