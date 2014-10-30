@@ -222,7 +222,7 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
         var variantsList = $scope.variantsList = [];
         var otherAttributes = [].concat($scope.otherAttributes, 'unit_price', 'units_available', 'mrp');
         $scope.fullAttributes = {};
-        $scope.imageUrl = product.photo[0];
+        $scope.imageUrl = product.photo[0][1];
 
         Requests.get('/product_variants', {id: args.product.id}, function(data) {
             if(data.variants) {

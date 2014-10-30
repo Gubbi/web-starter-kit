@@ -24,6 +24,6 @@
     "paper-fab": "Polymer/paper-fab#~0.4.1",
     "paper-toast": "Polymer/paper-toast#~0.4.1",
     "paper-shadow": "Polymer/paper-shadow#~0.4.1",
-    "paper-input": "Polymer/paper-input#~0.4.1"
+    "paper-input": "Polymer/paper-input#~0.4.2"
   }
 }
