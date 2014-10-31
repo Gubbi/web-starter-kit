@@ -272,6 +272,10 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
         return policy.has_cod && policy.min_amount_cod <= product.unit_price && policy.max_amount_cod >= product.unit_price;
     };
 
+    $scope.viewImage = function(url) {
+        $scope.imageUrl = url;
+    };
+
     $scope.addCart = function() {
         $scope.active.loading = true;
         Requests.post('/cart/', {
