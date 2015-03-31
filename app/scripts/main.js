@@ -120,7 +120,12 @@ app.filter('attrValue', function($sce) {
 app.service('Requests', function($http) {
     'use strict';
     this.get = function(url, data, success) { $http.get(url, {'params': data}).success(success); };
-    this.post = function (url, data, success) { $http.post(url, data).success(success); };
+    this.post = function (url, data, success) { $http({method: 'POST', url:url, data:data, transformRequest: function(obj) {
+        var str = [];
+        for(var p in obj)
+        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+        return str.join("&");
+    }, headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).success(success); };
 });
 
 app.controller('HomeCtrl', function ($scope, $rootScope, Requests) {
@@ -286,7 +291,7 @@ app.controller('PdtCtrl', function ($scope, $rootScope, Requests) {
             /*jshint camelcase: false */
             $rootScope.cartId = response.cart_id;
             $rootScope.cartItemCount = response.cart_item_count;
-            $rootScope.goToCart();
+            $scope.goToCart();
             $scope.active.loading = false;
         });
     };
