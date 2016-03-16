@@ -40,7 +40,7 @@
         <button class="menu"><img src="images/hamburger.svg" alt="Menu"></button>
         <h1 class="logo" ng-click="reload()">
             <img ng-src="{{ merchant.logo }}" title="{{ merchant.name }}" ng-if="merchant.logo"/>
-            <span ng-if="!merchant.logo">{{ merchant.name }}</span>
+            <span style="color: #222" ng-if="!merchant.logo">{{ merchant.name }}</span>
         </h1>
 
         <div id="track_order">
